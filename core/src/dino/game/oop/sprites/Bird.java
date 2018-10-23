@@ -1,6 +1,7 @@
 package dino.game.oop.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
@@ -11,18 +12,23 @@ public class Bird {
     private Rectangle bounds;
     private Vector3 position;
     private Vector3 velocity;
+    private Animation birdAnimation;
+    Texture texture = new Texture("birdanimation.png");
 
-    private Texture bird;
+
+//    private Texture bird;
 
     public Bird(int x, int y){
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0,0,0);
-        bird = new Texture("bird.png");
-        bounds = new Rectangle(x, y, bird.getWidth(), bird.getHeight());
+//        bird = new Texture("bird.png");
+        birdAnimation = new Animation(new TextureRegion(texture), 3,0.5f);
+        bounds = new Rectangle(x, y, texture.getWidth()/3, texture.getHeight());
 
     }
 
     public void update(float dt){
+        birdAnimation.update(dt);
         if (position.y > 0) {
             velocity.add(0, GRAVITY,0);
         }
@@ -42,13 +48,14 @@ public class Bird {
         return position;
     }
 
-    public Texture getTexture() {
-        return bird;
+    public TextureRegion getTexture() {
+        return birdAnimation.getFrame();
     }
     public void jump(){
         velocity.y = 250;
     }
     public void dispose(){
-        bird.dispose();
+        texture.dispose();
     }
+
 }
