@@ -41,6 +41,10 @@ public class Bird {
         bounds.setPosition(position.x, position.y);
     }
 
+    public void updateAnimation(float dt){
+        birdAnimation.update(dt);
+    }
+
     public Rectangle getBounds(){
         return bounds;
     }

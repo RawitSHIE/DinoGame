@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import dino.game.oop.states.EndGameState;
 import dino.game.oop.states.GameStateManager;
 import dino.game.oop.states.MenuState;
 
@@ -23,7 +24,7 @@ public class DinoGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
 //		img = new Texture("badlogic.jpg");
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 1, 0, 1);
 		gsm.push(new MenuState(gsm));
 
 	}

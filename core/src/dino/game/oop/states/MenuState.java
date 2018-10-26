@@ -13,6 +13,8 @@ public class MenuState extends State {
         super(gsm);
         background = new Texture("day.png");
         playBtn = new Texture("play.png");
+        cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
+        cam.position.x = 0;
 
     }
 
