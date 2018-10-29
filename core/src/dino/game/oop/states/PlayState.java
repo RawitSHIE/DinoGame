@@ -3,7 +3,9 @@ package dino.game.oop.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.sprites.Bird;
@@ -19,10 +21,17 @@ public class PlayState extends State{
 //    private Tube tube;
     private Texture ground;
     private Vector2 groundPos1, groundPos2;
+
     private boolean collide;
     private Texture gameover;
+    private Vector3 touchPos;
+
+    private int score = 0;
+    private int flag = 0;
+    private boolean isjump;
 
     private Array<Tube> tubes;
+
 
 
     public PlayState(GameStateManager gsm) {
@@ -43,17 +52,28 @@ public class PlayState extends State{
         }
 
         collide = false;
+        score = 0;
 
     }
 
     @Override
     protected void handleInput() {
-        if(Gdx.input.justTouched() && !collide){
+        double campos = cam.position.x + 25 - cam.viewportWidth/2;
+//        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+//        cam.unproject(touchPos);
+        if(Gdx.input.justTouched() && !collide) {
             bird.jump();
+            isjump = true;
+//            System.out.println(Gdx.input.getX() + "" + Gdx.input.getY());
         }else if(Gdx.input.justTouched()) {
+//        }else if(touchPos.x > campos - gameover.getWidth()/2 && touchPos.x < gameover.getWidth()/2 + campos%DinoGame.WIDTH + gameover.getWidth()){
             gsm.set(new PlayState(gsm));
+//            bird.jump();
+//            collide = false;
         }
+
     }
+
 
     @Override
     public void update(float dt) {
@@ -69,14 +89,28 @@ public class PlayState extends State{
 
                 if (cam.position.x - (cam.viewportWidth/2) > tube.getPostop().x + tube.getTopTube().getWidth()){
                     tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING)  * TUBE_COUNT));
+                    flag++;
+
                 }
 
                 if(tube.collides(bird.getBounds())){
 //                    gsm.set(new EndGameState(gsm));
                     collide = true;
-                    System.out.println("Gameover");
+                    System.out.println(score);
                 }
+
             }
+//score
+            int tmp = flag % 4;
+            if (tubes.get(tmp).getPostop().x + Tube.TUBE_WIDTH/2 + 0.5 + bird.getBounds().getWidth()/2 <= bird.getPosition().x
+                    && isjump &&
+                    tubes.get(tmp).getPostop().x + Tube.TUBE_WIDTH/2 + 3 + bird.getBounds().getWidth()/2>= bird.getPosition().x){
+                score ++;
+                System.out.println(score);
+                isjump = false;
+            }
+//            System.out.println(tubes.get(tmp).getPostop().x + " " + bird.getPosition().x);
+
             if (bird.getPosition().y < ground.getHeight() + GROUND_Y_OFFSET){
 //                gsm.set(new EndGameState(gsm));
                 collide = true;
@@ -106,6 +140,21 @@ public class PlayState extends State{
         if (collide){
             sb.draw(gameover, cam.position.x + 25 - cam.viewportWidth/2, cam.viewportHeight/2);
         }
+
+//        score
+        int indexone = score % 10;
+        int indexten = (int) Math.floor(score /10);
+        String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
+
+        Texture onth = new Texture(number[indexone]);
+        Texture tenth = new Texture(number[indexten]);
+
+        sb.draw(onth ,cam.position.x + 60 , cam.viewportHeight - 50);
+        if (indexten != 0)
+            sb.draw(tenth ,cam.position.x + 60  - tenth.getWidth() - 5 , cam.viewportHeight - 50);
+
+
+
         sb.end();
     }
 
@@ -128,4 +177,9 @@ public class PlayState extends State{
             groundPos2.add(ground.getWidth() * 2, 0);
         }
     }
+
+//    public boolean collides(){
+//        return player.overlaps(boundsTop) || player.overlaps(boundsBottom);
+//
+//    }
 }
