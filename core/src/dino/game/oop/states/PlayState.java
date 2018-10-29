@@ -9,9 +9,12 @@ import dino.game.oop.DinoGame;
 import dino.game.oop.sprites.Bird;
 import dino.game.oop.sprites.Tube;
 
+import java.awt.event.MouseListener;
+import java.util.Random;
+
 public class PlayState extends State{
     private static final int TUBE_SPACING = 125;
-    private static final int TUBE_COUNT = 4;
+    private static final int TUBE_COUNT = 10;
     private static final int GROUND_Y_OFFSET = -50;
 
     private Bird bird;
@@ -24,14 +27,16 @@ public class PlayState extends State{
 
     private Array<Tube> tubes;
 
+    private Random rand;
+
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
-        bird = new Bird(50,200);
         cam.setToOrtho(false, DinoGame.WIDTH / 2, DinoGame.HEIGHT / 2);
         bg = new Texture("day.png");
-
+        rand = new Random();
         ground = new Texture("ground.png");
+        bird = new Bird(50,ground.getHeight() + GROUND_Y_OFFSET);
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
         groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
@@ -41,7 +46,7 @@ public class PlayState extends State{
 
         tubes = new Array<Tube>();
         for (int i = 1 ; i <= TUBE_COUNT; i++){
-            tubes.add(new Tube(i  * (TUBE_SPACING + Tube.TUBE_WIDTH)));
+            tubes.add(new Tube( i * (rand.nextInt(1000)+ Tube.TUBE_WIDTH)));
         }
 
         collide = false;
@@ -101,20 +106,24 @@ public class PlayState extends State{
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
         for (Tube tube :  tubes){
             sb.draw(tube.getTopTube(), tube.getPostop().x , tube.getPostop().y);
-            sb.draw(tube.getBottomTube(), tube.getPosbottom().x, tube.getPosbottom().y);
         }
 
+
+        //first draw ground
         sb.draw(ground ,groundPos1.x, groundPos1.y);
         sb.draw(ground ,groundPos2.x, groundPos2.y);
         sb.draw(ground ,groundPos3.x, groundPos3.y);
         sb.draw(ground ,groundPos4.x, groundPos4.y);
 
+        //for game over
         if (collide){
-            sb.draw(gameover, cam.position.x + 25 - cam.viewportWidth/2, cam.viewportHeight/2);
+            sb.draw(gameover, cam.position.x, cam.viewportHeight/2);
         }
         sb.end();
     }
 
+
+    //for delete old one
     @Override
     public void dispose() {
         bg.dispose();
@@ -126,6 +135,8 @@ public class PlayState extends State{
         System.out.println("PlayState Dispose");
     }
 
+
+    //for Update ground over and over
     public void updateGround(){
         if (cam.position.x - cam.viewportWidth/2 > groundPos1.x + ground.getWidth()){
             groundPos1.add(ground.getWidth()*4, 0);

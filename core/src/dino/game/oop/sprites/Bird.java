@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Bird {
-    private static final int GRAVITY = -15;
-    private static final int  MOVEMENT = 100;
+    private static final int GRAVITY = 0;
+    private static final int  MOVEMENT = 200;
 
     private Rectangle bounds;
     private Vector3 position;
@@ -56,7 +56,7 @@ public class Bird {
         return birdAnimation.getFrame();
     }
     public void jump(){
-        velocity.y = 250;
+        velocity.x = 250;
     }
     public void dispose(){
         texture.dispose();
