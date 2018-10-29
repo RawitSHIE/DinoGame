@@ -10,8 +10,8 @@ import dino.game.oop.states.MenuState;
 
 public class DinoGame extends ApplicationAdapter {
 
-	public static final int WIDTH = 480;
-	public static final int HEIGHT = 800;
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
 
 	public static final String Title = "DinoRun";
 	private GameStateManager gsm;
