@@ -18,7 +18,7 @@ public class PlayState extends State{
     private Texture bg;
 //    private Tube tube;
     private Texture ground;
-    private Vector2 groundPos1, groundPos2;
+    private Vector2 groundPos1, groundPos2, groundPos3, groundPos4;
     private boolean collide;
     private Texture gameover;
 
@@ -32,8 +32,10 @@ public class PlayState extends State{
         bg = new Texture("day.png");
 
         ground = new Texture("ground.png");
-        groundPos1 = new Vector2(cam.position.x-cam.viewportWidth/2, GROUND_Y_OFFSET);
-        groundPos2 = new Vector2((cam.position.x - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
+        groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
+        groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
+        groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
+        groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
 
         gameover = new Texture("gameover.png");
 
@@ -94,6 +96,8 @@ public class PlayState extends State{
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(bg, cam.position.x - cam.viewportWidth/2, 0);
+        sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth(), 0);
+        sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
         for (Tube tube :  tubes){
             sb.draw(tube.getTopTube(), tube.getPostop().x , tube.getPostop().y);
@@ -102,6 +106,8 @@ public class PlayState extends State{
 
         sb.draw(ground ,groundPos1.x, groundPos1.y);
         sb.draw(ground ,groundPos2.x, groundPos2.y);
+        sb.draw(ground ,groundPos3.x, groundPos3.y);
+        sb.draw(ground ,groundPos4.x, groundPos4.y);
 
         if (collide){
             sb.draw(gameover, cam.position.x + 25 - cam.viewportWidth/2, cam.viewportHeight/2);
@@ -122,10 +128,16 @@ public class PlayState extends State{
 
     public void updateGround(){
         if (cam.position.x - cam.viewportWidth/2 > groundPos1.x + ground.getWidth()){
-            groundPos1.add(ground.getWidth() * 2, 0);
+            groundPos1.add(ground.getWidth()*4, 0);
         }
         if (cam.position.x - cam.viewportWidth/2 > groundPos2.x + ground.getWidth()){
-            groundPos2.add(ground.getWidth() * 2, 0);
+            groundPos2.add(ground.getWidth()*4, 0);
+        }
+        if (cam.position.x - cam.viewportWidth/2 > groundPos3.x + ground.getWidth()) {
+            groundPos3.add(ground.getWidth()*4, 0);
+        }
+        if (cam.position.x - cam.viewportWidth/2 > groundPos4.x + ground.getWidth()){
+            groundPos4.add(ground.getWidth()*4, 0);
         }
     }
 }
