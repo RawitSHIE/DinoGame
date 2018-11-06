@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.sprites.Bird;
+import dino.game.oop.sprites.Head;
 import dino.game.oop.sprites.Tube;
 
 import java.awt.event.MouseListener;
@@ -18,6 +19,7 @@ public class PlayState extends State{
     private static final int GROUND_Y_OFFSET = -50;
 
     private Bird bird;
+    private Head head;
     private Texture bg;
 //    private Tube tube;
     private Texture ground;
@@ -32,11 +34,12 @@ public class PlayState extends State{
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
-        cam.setToOrtho(false, DinoGame.WIDTH / 2, DinoGame.HEIGHT / 2);
+        cam.setToOrtho(false, DinoGame.WIDTH /2, DinoGame.HEIGHT/2 );
         bg = new Texture("day.png");
         rand = new Random();
         ground = new Texture("ground.png");
-        bird = new Bird(50,ground.getHeight() + GROUND_Y_OFFSET);
+        bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
+        head = new Head(20,20);
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
         groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
@@ -70,6 +73,7 @@ public class PlayState extends State{
         if (!collide){
             bird.update(dt);
             cam.position.x = bird.getPosition().x + 80;
+            head.update(dt, cam.position.x);
 
             for (int i = 0 ; i < tubes.size ; i++){
                 Tube tube = tubes.get(i);
@@ -78,20 +82,21 @@ public class PlayState extends State{
                     tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING)  * TUBE_COUNT));
                 }
 
-                if(tube.collides(bird.getBounds())){
+                if(tube.collides(head.getBounds())){
 //                    gsm.set(new EndGameState(gsm));
                     collide = true;
                     System.out.println("Gameover");
                 }
             }
-            if (bird.getPosition().y < ground.getHeight() + GROUND_Y_OFFSET){
+//            if (bird.getPosition().y < ground.getHeight() + GROUND_Y_OFFSET){
 //                gsm.set(new EndGameState(gsm));
-                collide = true;
-                System.out.println("Gameover");
-            }
+//                collide = true;
+//                System.out.println("Gameover");
+//            }
             cam.update();
         }else{
             bird.updateAnimation(dt);
+            head.updateAnimation(dt);
         }
 
     }
@@ -104,6 +109,7 @@ public class PlayState extends State{
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth(), 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
+        sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
         for (Tube tube :  tubes){
             sb.draw(tube.getTopTube(), tube.getPostop().x , tube.getPostop().y);
         }
