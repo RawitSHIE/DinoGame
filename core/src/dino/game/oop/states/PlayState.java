@@ -21,17 +21,13 @@ public class PlayState extends State{
     private static final int GROUND_Y_OFFSET = -50;
 
     private boolean fall;
-
     private Bird bird;
     private Head head;
-    private Texture bg;
-//    private Tube tube;
-    private Texture ground;
     private Vector2 groundPos1, groundPos2, groundPos3, groundPos4;
     private boolean collide;
-    private Texture gameover;
-    private Array<Coin> coins;
+    private Texture bg, ground, gameover;
 
+    private Array<Coin> coins;
     private Array<Tube> tubes;
 
     private Random rand;
@@ -41,7 +37,7 @@ public class PlayState extends State{
     private int flag = 0;
     private boolean isjump;
     private int score = 0;
-
+    private double health = 100;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -51,27 +47,22 @@ public class PlayState extends State{
         ground = new Texture("ground.png");
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,20);
-//        grounds
+        //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
         groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
         groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
-
         gameover = new Texture("gameover.png");
-
         tubes = new Array<Tube>();
         for (int i = 1 ; i <= TUBE_COUNT; i++){
             tubes.add(new Tube( i * (TUBE_SPACING+ Tube.TUBE_WIDTH)));
         }
-
         coins = new Array<Coin>();
         for (int i = 1 ; i <= COINS_COUNT; i++){
             coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (TUBE_SPACING + 2 * Tube.TUBE_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
-
         collide = false;
         scale = 0;
-
     }
 
     @Override
@@ -80,7 +71,6 @@ public class PlayState extends State{
             bird.jump();
             bird.setFall(true);
             System.out.println("Touch");
-
         }else if(Gdx.input.justTouched()) {
             gsm.set(new PlayState(gsm));
         }
@@ -90,42 +80,42 @@ public class PlayState extends State{
     public void update(float dt) {
         handleInput();
         updateGround();
-
         if (!collide){
             bird.update(dt);
             cam.position.x = bird.getPosition().x + 80;
             head.update(dt, cam.position.x);
 
-
-
             for (Tube tube : tubes){
-
                 if (cam.position.x - (cam.viewportWidth/2) > tube.getPostop().x + tube.getTopTube().getWidth()){
                     tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * 4));
 //                    flag++;
-
                 }
-
                 if(tube.collides(head.getBounds())){
-//                    gsm.set(new EndGameState(gsm));
                     collide = true;
                     System.out.println("Gameover");
                 }
-
             }
 
             for (Coin c : coins){
                 if (cam.position.x - (cam.viewportWidth/2) > c.getPoscoins().x + c.getCoins().getWidth()){
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING)  * COINS_COUNT));
                 }
-
                 if (c.collides(head.getBounds())){
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING)  * COINS_COUNT));
-//                    System.out.println("point +1");
                     score ++;
+                    if (health + 10 >= 100){
+                        health = 99;
+                    }else{
+                        health += 10;
+                    }
                 }
-
             }
+
+            health = health - 0.1;
+            if (health <=  0){
+                collide = true;
+            }
+            System.out.println(health);
 
 //            score tubes
 
@@ -139,7 +129,6 @@ public class PlayState extends State{
 //            }
 
             cam.update();
-
 
         }else{
             bird.updateAnimation(dt);
@@ -166,23 +155,22 @@ public class PlayState extends State{
             sb.draw(c.getCoins(), c.getPoscoins().x, c.getPoscoins().y);
         }
 
-        //first draw ground
+        //draw ground
         sb.draw(ground ,groundPos1.x, groundPos1.y);
         sb.draw(ground ,groundPos2.x, groundPos2.y);
         sb.draw(ground ,groundPos3.x, groundPos3.y);
         sb.draw(ground ,groundPos4.x, groundPos4.y);
 
-        //for game over
+        //game over
         if (collide){
             sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
         }
 
-//        score screen
+        //score screen
 
         int indexone = score % 10;
         int indexten = (int) Math.floor(score /10);
         String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
-
 
         Texture onth = new Texture(number[indexone]);
         Texture tenth = new Texture(number[indexten]);
@@ -190,11 +178,25 @@ public class PlayState extends State{
         sb.draw(onth ,cam.position.x + 200 , cam.viewportHeight - 50);
         if (indexten != 0)
             sb.draw(tenth ,cam.position.x + 200  - tenth.getWidth() - 5 , cam.viewportHeight - 50);
+
+        //health screen
+        int ione = (int) health % 10;
+        int iten = (int) Math.floor((health / 10)%10);
+
+        if (iten >=0 && ione >= 0){
+            Texture one  = new Texture(number[ione]);
+            System.out.println(iten);
+            Texture ten = new Texture(number[iten]);
+
+            sb.draw(one ,cam.position.x - cam.viewportWidth/2 + tenth.getWidth() + 10, cam.viewportHeight - 50);
+            if (iten != 0)
+                sb.draw(ten ,cam.position.x - cam.viewportWidth/2 + 5 , cam.viewportHeight - 50);
+        }
         sb.end();
+
     }
 
     //for delete old one
-
     @Override
     public void dispose() {
         bg.dispose();
@@ -208,7 +210,6 @@ public class PlayState extends State{
         }
         System.out.println("PlayState Dispose");
     }
-
 
     //for Update ground over and over
     public void updateGround(){
