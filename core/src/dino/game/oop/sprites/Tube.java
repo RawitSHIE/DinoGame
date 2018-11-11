@@ -38,7 +38,7 @@ public class Tube {
 
 
     public void reposition(float x){
-        postop.set(x, rand.nextInt(FLUCTUATION) + TUBE_GAB + LOWEST_OPENING);
+        postop.set(x, rand.nextInt(FLUCTUATION) + LOWEST_OPENING);
         boundsTop.setPosition(postop.x, postop.y);
 
     }

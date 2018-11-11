@@ -35,7 +35,11 @@ public class PlayState extends State{
 
     private Random rand;
     private boolean drag = false;
+
     double scale = 0;
+    private int flag = 0;
+    private boolean isjump;
+    private int score = 0;
 
 
     public PlayState(GameStateManager gsm) {
@@ -56,12 +60,12 @@ public class PlayState extends State{
 
         tubes = new Array<Tube>();
         for (int i = 1 ; i <= TUBE_COUNT; i++){
-            tubes.add(new Tube( i * (rand.nextInt(1000)+ Tube.TUBE_WIDTH)));
+            tubes.add(new Tube( i * (TUBE_SPACING+ Tube.TUBE_WIDTH)));
         }
 
         coins = new Array<Coin>();
         for (int i = 1 ; i <= COINS_COUNT; i++){
-            coins.add(new Coin( i * (rand.nextInt(1000)+ Coin.COIN_WIDTH)));
+            coins.add(new Coin( i * (TUBE_SPACING + Coin.COIN_WIDTH)));
         }
 
         collide = false;
@@ -91,11 +95,12 @@ public class PlayState extends State{
             cam.position.x = bird.getPosition().x + 80;
             head.update(dt, cam.position.x);
 
-            for (int i = 0 ; i < tubes.size ; i++){
-                Tube tube = tubes.get(i);
+            for (Tube tube : tubes){
 
                 if (cam.position.x - (cam.viewportWidth/2) > tube.getPostop().x + tube.getTopTube().getWidth()){
-                    tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING)  * TUBE_COUNT));
+                    tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * 4));
+//                    flag++;
+
                 }
 
                 if(tube.collides(head.getBounds())){
@@ -111,7 +116,24 @@ public class PlayState extends State{
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + TUBE_SPACING)  * COINS_COUNT));
                 }
 
+                if (c.collides(head.getBounds())){
+                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + TUBE_SPACING)  * COINS_COUNT));
+//                    System.out.println("point +1");
+                    score ++;
+                }
+
             }
+
+//            score tubes
+
+//            int tmp = flag % 4;
+//            if (tubes.get(tmp).getPostop().x + Tube.TUBE_WIDTH/2 + 0.5 + bird.getBounds().getWidth()/2 <= bird.getPosition().x
+//                    &&
+//                    tubes.get(tmp).getPostop().x + Tube.TUBE_WIDTH/2 + 3 + bird.getBounds().getWidth()/2>= bird.getPosition().x){
+//
+//                score ++;
+//                System.out.println(score);
+//            }
 
             cam.update();
 
@@ -132,13 +154,14 @@ public class PlayState extends State{
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
         sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
-        for (Coin c : coins){
-            sb.draw(c.getCoins(), c.getPoscoins().x, c.getPoscoins().y);
-        }
-        for (Tube tube :  tubes){
+
+        for (Tube tube : tubes){
             sb.draw(tube.getTopTube(), tube.getPostop().x , tube.getPostop().y);
         }
 
+        for (Coin c : coins){
+            sb.draw(c.getCoins(), c.getPoscoins().x, c.getPoscoins().y);
+        }
 
         //first draw ground
         sb.draw(ground ,groundPos1.x, groundPos1.y);
@@ -150,6 +173,19 @@ public class PlayState extends State{
         if (collide){
             sb.draw(gameover, cam.position.x, cam.viewportHeight/2);
         }
+
+//        score screen
+        int indexone = score % 10;
+        int indexten = (int) Math.floor(score /10);
+        String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
+
+
+        Texture onth = new Texture(number[indexone]);
+        Texture tenth = new Texture(number[indexten]);
+
+        sb.draw(onth ,cam.position.x + 60 , cam.viewportHeight - 50);
+        if (indexten != 0)
+            sb.draw(tenth ,cam.position.x + 60  - tenth.getWidth() - 5 , cam.viewportHeight - 50);
         sb.end();
     }
 
