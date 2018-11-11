@@ -16,7 +16,8 @@ import java.util.Random;
 public class PlayState extends State{
     private static final int TUBE_SPACING = 125;
     private static final int TUBE_COUNT = 4;
-    private static final int COINS_COUNT = 4;
+    private static final int COINS_COUNT = 6;
+    private static final int COINS_SPACING = (TUBE_SPACING + (Tube.TUBE_WIDTH - Coin.COIN_WIDTH))*1;
     private static final int GROUND_Y_OFFSET = -50;
 
     private boolean fall;
@@ -65,7 +66,7 @@ public class PlayState extends State{
 
         coins = new Array<Coin>();
         for (int i = 1 ; i <= COINS_COUNT; i++){
-            coins.add(new Coin( i * (TUBE_SPACING + Coin.COIN_WIDTH)));
+            coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (TUBE_SPACING + 2 * Tube.TUBE_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
 
         collide = false;
@@ -95,6 +96,8 @@ public class PlayState extends State{
             cam.position.x = bird.getPosition().x + 80;
             head.update(dt, cam.position.x);
 
+
+
             for (Tube tube : tubes){
 
                 if (cam.position.x - (cam.viewportWidth/2) > tube.getPostop().x + tube.getTopTube().getWidth()){
@@ -113,11 +116,11 @@ public class PlayState extends State{
 
             for (Coin c : coins){
                 if (cam.position.x - (cam.viewportWidth/2) > c.getPoscoins().x + c.getCoins().getWidth()){
-                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + TUBE_SPACING)  * COINS_COUNT));
+                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING)  * COINS_COUNT));
                 }
 
                 if (c.collides(head.getBounds())){
-                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + TUBE_SPACING)  * COINS_COUNT));
+                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING)  * COINS_COUNT));
 //                    System.out.println("point +1");
                     score ++;
                 }
@@ -171,10 +174,11 @@ public class PlayState extends State{
 
         //for game over
         if (collide){
-            sb.draw(gameover, cam.position.x, cam.viewportHeight/2);
+            sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
         }
 
 //        score screen
+
         int indexone = score % 10;
         int indexten = (int) Math.floor(score /10);
         String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
@@ -183,14 +187,14 @@ public class PlayState extends State{
         Texture onth = new Texture(number[indexone]);
         Texture tenth = new Texture(number[indexten]);
 
-        sb.draw(onth ,cam.position.x + 60 , cam.viewportHeight - 50);
+        sb.draw(onth ,cam.position.x + 200 , cam.viewportHeight - 50);
         if (indexten != 0)
-            sb.draw(tenth ,cam.position.x + 60  - tenth.getWidth() - 5 , cam.viewportHeight - 50);
+            sb.draw(tenth ,cam.position.x + 200  - tenth.getWidth() - 5 , cam.viewportHeight - 50);
         sb.end();
     }
 
-
     //for delete old one
+
     @Override
     public void dispose() {
         bg.dispose();
