@@ -12,7 +12,7 @@ public class Tube {
 
     private static final int FLUCTUATION = 130;
     private static final int TUBE_GAB = 100;
-    private static final int LOWEST_OPENING = 100;
+    private static final int LOWEST_OPENING = 120;
 
     private Rectangle boundsTop;
     private Texture topTube;
@@ -24,7 +24,6 @@ public class Tube {
         rand = new Random();
 
         postop = new Vector2(x ,rand.nextInt(FLUCTUATION) + LOWEST_OPENING);
-
         boundsTop = new Rectangle(postop.x, postop.y, topTube.getWidth(), topTube.getHeight());
     }
 

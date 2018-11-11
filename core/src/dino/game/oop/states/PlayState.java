@@ -1,33 +1,35 @@
 package dino.game.oop.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.sprites.Bird;
+import dino.game.oop.sprites.Coin;
+import dino.game.oop.sprites.Head;
 import dino.game.oop.sprites.Tube;
 
-import java.awt.event.MouseListener;
 import java.util.Random;
 
 public class PlayState extends State{
     private static final int TUBE_SPACING = 125;
-    private static final int TUBE_COUNT = 10;
+    private static final int TUBE_COUNT = 4;
+    private static final int COINS_COUNT = 4;
     private static final int GROUND_Y_OFFSET = -50;
 
     private boolean fall;
 
     private Bird bird;
+    private Head head;
     private Texture bg;
 //    private Tube tube;
     private Texture ground;
     private Vector2 groundPos1, groundPos2, groundPos3, groundPos4;
     private boolean collide;
     private Texture gameover;
+    private Array<Coin> coins;
 
     private Array<Tube> tubes;
 
@@ -38,12 +40,13 @@ public class PlayState extends State{
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
-        fall = false;
-        cam.setToOrtho(false, DinoGame.WIDTH / 2, DinoGame.HEIGHT / 2);
+        cam.setToOrtho(false, DinoGame.WIDTH /2, DinoGame.HEIGHT/2 );
         bg = new Texture("day.png");
         rand = new Random();
         ground = new Texture("ground.png");
-        bird = new Bird(50,ground.getHeight() + GROUND_Y_OFFSET);
+        bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
+        head = new Head(20,20);
+//        grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
         groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
@@ -54,6 +57,11 @@ public class PlayState extends State{
         tubes = new Array<Tube>();
         for (int i = 1 ; i <= TUBE_COUNT; i++){
             tubes.add(new Tube( i * (rand.nextInt(1000)+ Tube.TUBE_WIDTH)));
+        }
+
+        coins = new Array<Coin>();
+        for (int i = 1 ; i <= COINS_COUNT; i++){
+            coins.add(new Coin( i * (rand.nextInt(1000)+ Coin.COIN_WIDTH)));
         }
 
         collide = false;
@@ -79,9 +87,9 @@ public class PlayState extends State{
         updateGround();
 
         if (!collide){
-
             bird.update(dt);
             cam.position.x = bird.getPosition().x + 80;
+            head.update(dt, cam.position.x);
 
             for (int i = 0 ; i < tubes.size ; i++){
                 Tube tube = tubes.get(i);
@@ -90,43 +98,30 @@ public class PlayState extends State{
                     tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING)  * TUBE_COUNT));
                 }
 
-                if(tube.collides(bird.getBounds())){
+                if(tube.collides(head.getBounds())){
 //                    gsm.set(new EndGameState(gsm));
                     collide = true;
                     System.out.println("Gameover");
                 }
+
             }
 
-
-            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-                drag = true;
-                if (!drag){
-                    scale = Gdx.input.getY();
-                }else if (drag){
-                    Vector3 p = bird.getPosition();
-//                    p.add(0,(float) scale - Gdx.input.getY(), 0);
-                    bird.setPosition(p);
+            for (Coin c : coins){
+                if (cam.position.x - (cam.viewportWidth/2) > c.getPoscoins().x + c.getCoins().getWidth()){
+                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + TUBE_SPACING)  * COINS_COUNT));
                 }
 
-            }else{
-                drag = false;
-
             }
 
-//            if (bird.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET){
-////            if (ground.)
-////                gsm.set(new EndGameState(gsm));
-////                collide = true;
-//                bird.setFall(false);
-//
-//            }
             cam.update();
+
+
         }else{
             bird.updateAnimation(dt);
+            head.updateAnimation(dt);
         }
 
     }
-
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
@@ -136,6 +131,10 @@ public class PlayState extends State{
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth(), 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
+        sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
+        for (Coin c : coins){
+            sb.draw(c.getCoins(), c.getPoscoins().x, c.getPoscoins().y);
+        }
         for (Tube tube :  tubes){
             sb.draw(tube.getTopTube(), tube.getPostop().x , tube.getPostop().y);
         }
@@ -163,6 +162,9 @@ public class PlayState extends State{
         ground.dispose();
         for (Tube tube:tubes){
             tube.dispose();
+        }
+        for (Coin c : coins){
+            c.dispose();
         }
         System.out.println("PlayState Dispose");
     }
