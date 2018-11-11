@@ -6,13 +6,18 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Bird {
-    private static final int GRAVITY = 0;
-    private static final int  MOVEMENT = 200;
+    private static final int GRAVITY = -15;
+    public static final int  MOVEMENT = 200;
 
     private Rectangle bounds;
     private Vector3 position;
     private Vector3 velocity;
     private Animation birdAnimation;
+
+
+
+    private boolean fall;
+
     Texture texture = new Texture("birdanimation.png");
 
 
@@ -29,8 +34,11 @@ public class Bird {
 
     public void update(float dt){
         birdAnimation.update(dt);
-        if (position.y > 0) {
-            velocity.add(0, GRAVITY,0);
+        if (position.y > 0 && fall) {
+            jump();
+            velocity.add(0, 0,0);
+        }else if (position.y < 0 && !fall){
+            velocity.add(0, 0,0);
         }
         velocity.scl(dt);
         position.add(MOVEMENT * dt ,velocity.y, 0);
@@ -44,12 +52,23 @@ public class Bird {
     public void updateAnimation(float dt){
         birdAnimation.update(dt);
     }
-
+    public void setFall(boolean fall) {
+        this.fall = fall;
+    }
     public Rectangle getBounds(){
         return bounds;
     }
     public Vector3 getPosition() {
         return position;
+    }
+
+//    public void setPosition(double y){
+////        position.add(0,(float) y,0);
+//        position.y = (float) y;
+//    }
+
+    public void setPosition(Vector3 p){
+        position = p;
     }
 
     public TextureRegion getTexture() {
