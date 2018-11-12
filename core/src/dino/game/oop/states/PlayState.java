@@ -125,11 +125,12 @@ public class PlayState extends State{
                 collide = true;
             }
 
-//            if (collide){
-//                if (score > Score.getScore()){
-//                    Score.setScore(score);
-//                }
-//            }
+//            Star Scoring
+            if (collide){
+                if (score > Score.getScore()){
+                    Score.setScore(score);
+                }
+            }
 //            System.out.println(health);
             //score tubes
 
