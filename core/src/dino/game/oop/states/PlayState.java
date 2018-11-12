@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
+import dino.game.oop.scoring.Score;
 import dino.game.oop.sprites.Bird;
 import dino.game.oop.sprites.Coin;
 import dino.game.oop.sprites.Head;
 import dino.game.oop.sprites.Tube;
 
+import javax.xml.soap.Text;
 import java.util.Random;
 
 public class PlayState extends State{
@@ -33,11 +35,12 @@ public class PlayState extends State{
     private Random rand;
     private boolean drag = false;
 
-    double scale = 0;
-    private int flag = 0;
-    private boolean isjump;
     private int score = 0;
     private double health = 100;
+
+    String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
+
+//    high score;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -47,22 +50,29 @@ public class PlayState extends State{
         ground = new Texture("ground.png");
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,20);
+
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
         groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
         groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
         gameover = new Texture("gameover.png");
+
+        //  Tubes Collection
         tubes = new Array<Tube>();
         for (int i = 1 ; i <= TUBE_COUNT; i++){
             tubes.add(new Tube( i * (TUBE_SPACING+ Tube.TUBE_WIDTH)));
         }
+
+        //  Coins Collection
         coins = new Array<Coin>();
         for (int i = 1 ; i <= COINS_COUNT; i++){
             coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (TUBE_SPACING + 2 * Tube.TUBE_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
+
+        System.out.println(Score.getScore());
         collide = false;
-        scale = 0;
+
     }
 
     @Override
@@ -88,7 +98,6 @@ public class PlayState extends State{
             for (Tube tube : tubes){
                 if (cam.position.x - (cam.viewportWidth/2) > tube.getPostop().x + tube.getTopTube().getWidth()){
                     tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * 4));
-//                    flag++;
                 }
                 if(tube.collides(head.getBounds())){
                     collide = true;
@@ -115,9 +124,14 @@ public class PlayState extends State{
             if (health <=  0){
                 collide = true;
             }
-            System.out.println(health);
 
-//            score tubes
+//            if (collide){
+//                if (score > Score.getScore()){
+//                    Score.setScore(score);
+//                }
+//            }
+//            System.out.println(health);
+            //score tubes
 
 //            int tmp = flag % 4;
 //            if (tubes.get(tmp).getPostop().x + Tube.TUBE_WIDTH/2 + 0.5 + bird.getBounds().getWidth()/2 <= bird.getPosition().x
@@ -140,7 +154,6 @@ public class PlayState extends State{
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
-
         sb.draw(bg, cam.position.x - cam.viewportWidth/2, 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth(), 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
@@ -164,20 +177,26 @@ public class PlayState extends State{
         //game over
         if (collide){
             sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
+
+            Texture one  = new Texture(number[Score.getScore()%10]);
+            Texture ten = new Texture(number[Score.getScore()/10]);
+
+            sb.draw(ten ,cam.position.x - one.getWidth() - 1, cam.viewportHeight/2 - one.getHeight()/2);
+            sb.draw(one ,cam.position.x + 1, cam.viewportHeight/2 - one.getHeight()/2);
         }
 
         //score screen
 
         int indexone = score % 10;
         int indexten = (int) Math.floor(score /10);
-        String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
         Texture onth = new Texture(number[indexone]);
         Texture tenth = new Texture(number[indexten]);
 
         sb.draw(onth ,cam.position.x + 200 , cam.viewportHeight - 50);
-        if (indexten != 0)
+        if (indexten != 0){
             sb.draw(tenth ,cam.position.x + 200  - tenth.getWidth() - 5 , cam.viewportHeight - 50);
+        }
 
         //health screen
         int ione = (int) health % 10;
@@ -185,15 +204,16 @@ public class PlayState extends State{
 
         if (iten >=0 && ione >= 0){
             Texture one  = new Texture(number[ione]);
-            System.out.println(iten);
+//            System.out.println(iten);
             Texture ten = new Texture(number[iten]);
 
             sb.draw(one ,cam.position.x - cam.viewportWidth/2 + tenth.getWidth() + 10, cam.viewportHeight - 50);
-            if (iten != 0)
-                sb.draw(ten ,cam.position.x - cam.viewportWidth/2 + 5 , cam.viewportHeight - 50);
+            sb.draw(ten ,cam.position.x - cam.viewportWidth/2 + 5 , cam.viewportHeight - 50);
+        }else {
+            sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + tenth.getWidth() + 10, cam.viewportHeight - 50);
+            sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + 5, cam.viewportHeight - 50);
         }
         sb.end();
-
     }
 
     //for delete old one
