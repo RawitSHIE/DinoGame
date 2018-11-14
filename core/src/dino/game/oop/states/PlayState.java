@@ -25,7 +25,7 @@ public class PlayState extends State{
     private boolean collide;
     private Texture bg, ground, gameover;
     private Texture score_one, score_ten;
-    private Texture health_one, health_ten, bar;
+    private Texture health_one, health_ten, bar, bgh;
 
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
@@ -51,6 +51,7 @@ public class PlayState extends State{
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,20);
         batch = new SpriteBatch();
+        bgh = new Texture("white-dot.png");
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -188,7 +189,7 @@ public class PlayState extends State{
 
         //score screen
         int indexone = score % 10;
-        int indexten = (int) Math.floor(score /10);
+        int indexten = (int) Math.floor(score/10);
 
         score_one = new Texture(number[indexone]);
         score_ten = new Texture(number[indexten]);
@@ -212,8 +213,11 @@ public class PlayState extends State{
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + 5, cam.viewportHeight - 50);
         }
+        
+        // health Progress bar
         float ratio = (float) health/100;
-        sb.draw(bar, cam.position.x - cam.viewportWidth/2, cam.position.y - cam.viewportHeight/2 ,10, cam.viewportHeight * ratio );
+        sb.draw(bgh, cam.position.x - cam.viewportWidth/2 + 19, cam.position.y - cam.viewportHeight/4 ,12, cam.viewportHeight/2);
+        sb.draw(bar, cam.position.x - cam.viewportWidth/2 + 20, cam.position.y - cam.viewportHeight/4 ,10, cam.viewportHeight/2 * ratio );
 
         sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
 
@@ -231,6 +235,8 @@ public class PlayState extends State{
         score_ten.dispose();
         health_one.dispose();
         health_ten.dispose();
+        bar.dispose();
+        bgh.dispose();
 
         for (Obstacle obstacle : obstacles){
             obstacle.dispose();
