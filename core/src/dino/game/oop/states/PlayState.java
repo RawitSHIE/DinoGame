@@ -25,7 +25,7 @@ public class PlayState extends State{
     private boolean collide;
     private Texture bg, ground, gameover;
     private Texture score_one, score_ten;
-    private Texture health_one, health_ten;
+    private Texture health_one, health_ten, bar;
 
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
@@ -37,6 +37,7 @@ public class PlayState extends State{
     private double health = 100;
     private boolean highscore = false;
     private boolean set = false;
+    private SpriteBatch batch;
 
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
@@ -49,6 +50,7 @@ public class PlayState extends State{
         ground = new Texture("new-ground.png");
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,20);
+        batch = new SpriteBatch();
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -68,6 +70,9 @@ public class PlayState extends State{
         for (int i = 1 ; i <= COINS_COUNT; i++){
             coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
+
+//        bar
+        bar = new Texture("dot.png");
 
         potion = new Potion((POTION_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2);
         System.out.println(Score.getScore());
@@ -165,7 +170,6 @@ public class PlayState extends State{
         sb.draw(ground ,groundPos3.x, groundPos3.y);
         sb.draw(ground ,groundPos4.x, groundPos4.y);
 
-
         //game over
         if (collide){
             if (set == false){
@@ -173,7 +177,6 @@ public class PlayState extends State{
                 set = true;
             }
             sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
-
             for (Integer i = 0; i < 3; i++){
                 Texture one  = new Texture(number[Score.getScore().get(i)%10]);
                 Texture ten = new Texture(number[Score.getScore().get(i)/10]);
@@ -184,7 +187,6 @@ public class PlayState extends State{
         }
 
         //score screen
-
         int indexone = score % 10;
         int indexten = (int) Math.floor(score /10);
 
@@ -210,6 +212,8 @@ public class PlayState extends State{
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + 5, cam.viewportHeight - 50);
         }
+        float ratio = (float) health/100;
+        sb.draw(bar, cam.position.x - cam.viewportWidth/2, cam.position.y - cam.viewportHeight/2 ,10, cam.viewportHeight * ratio );
 
         sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
 
