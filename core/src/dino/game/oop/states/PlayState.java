@@ -60,7 +60,7 @@ public class PlayState extends State{
         groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
         gameover = new Texture("gameover.png");
 
-        //  Tubes Collection
+        //  Obs Collection
         obstacles = new Array<Obstacle>();
         for (int i = 1; i <= OBS_COUNT; i++){
             obstacles.add(new Obstacle( i * (OBS_SPACING + Obstacle.OBS_WIDTH)));
@@ -127,10 +127,9 @@ public class PlayState extends State{
                 if (health + 10 >= 100){
                     health = 99;
                 }else{
-                    health += 10;
+                    health += 20;
                 }
             }
-
 
             health = health - 0.1;
             if (health <=  0){
@@ -168,6 +167,7 @@ public class PlayState extends State{
         sb.draw(ground ,groundPos2.x, groundPos2.y);
         sb.draw(ground ,groundPos3.x, groundPos3.y);
         sb.draw(ground ,groundPos4.x, groundPos4.y);
+
 
         //game over
         if (collide){
@@ -237,6 +237,8 @@ public class PlayState extends State{
         for (Coin c : coins){
             c.dispose();
         }
+        potion.dispose();
+
         System.out.println("PlayState Dispose");
     }
 
