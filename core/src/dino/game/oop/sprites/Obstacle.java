@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.Random;
 
-public class Tube {
+public class Obstacle {
     public static final int TUBE_WIDTH = 52;
 
     private static final int FLUCTUATION = 130;
@@ -19,7 +19,7 @@ public class Tube {
     private Vector2 postop;
     private Random rand;
 
-    public Tube(float x){
+    public Obstacle(float x){
         topTube  = new Texture("toptube.png");
         rand = new Random();
 

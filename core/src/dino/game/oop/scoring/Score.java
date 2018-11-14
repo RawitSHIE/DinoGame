@@ -1,23 +1,35 @@
 package dino.game.oop.scoring;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Score {
     private static final String LOC = "score.txt";
     private static FileReader fileReader;
     private static BufferedReader bufferedReader;
     private static FileWriter fileWriter;
+    private static PrintWriter printWriter;
+    private static ArrayList<Integer> rank;
 
-    public static int getScore(){
+    public Score(){
+
+
+    }
+
+    public static ArrayList<Integer> getScore(){
         try {
             fileReader = new FileReader(LOC);
             bufferedReader = new BufferedReader(fileReader);
+            rank = new ArrayList(3);
             String line = null;
-            line = bufferedReader.readLine();
-            return Integer.parseInt(line);
+            while ((line = bufferedReader.readLine()) != null){
+                rank.add(Integer.parseInt(line));
+            }
+            Collections.sort(rank);
+            Collections.reverse(rank);
+            return rank;
+
         }catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -28,7 +40,6 @@ public class Score {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             try {
                 if (bufferedReader != null){
                     bufferedReader.close();
@@ -37,12 +48,36 @@ public class Score {
                 e.printStackTrace();
             }
         }
-        return 0;
+
+        return null;
     }
-    public static void setScore(int score){
+
+    public static void setScore(Integer score){
         try {
+            rank = getScore();
+            Collections.sort(rank);
+            Collections.reverse(rank);
             fileWriter = new FileWriter(LOC);
-            fileWriter.write(Integer.toString(score));
+            printWriter = new PrintWriter(fileWriter);
+
+            for (int i = 0; i < rank.size(); i++){
+                if (rank.get(i) == score){
+                    break;
+                }
+                if (rank.get(i) < score){
+                    rank.add(score);
+                    Collections.sort(rank);
+                    Collections.reverse(rank);
+                    rank.remove(3);
+                    break;
+                }
+            }
+            String line = null;
+            for (Integer i : rank){
+                printWriter.write(i + "\n");
+            }
+
+            System.out.println(rank);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
@@ -55,8 +90,7 @@ public class Score {
     }
 
     public static void main(String[] args) {
-        Score obj = new Score();
-        System.out.println(obj.getScore());
+
     }
 
 }

@@ -10,16 +10,15 @@ import dino.game.oop.scoring.Score;
 import dino.game.oop.sprites.Bird;
 import dino.game.oop.sprites.Coin;
 import dino.game.oop.sprites.Head;
-import dino.game.oop.sprites.Tube;
+import dino.game.oop.sprites.Obstacle;
 
-import javax.xml.soap.Text;
 import java.util.Random;
 
 public class PlayState extends State{
     private static final int TUBE_SPACING = 125;
     private static final int TUBE_COUNT = 4;
     private static final int COINS_COUNT = 6;
-    private static final int COINS_SPACING = (TUBE_SPACING + (Tube.TUBE_WIDTH - Coin.COIN_WIDTH))*1;
+    private static final int COINS_SPACING = (TUBE_SPACING + (Obstacle.TUBE_WIDTH - Coin.COIN_WIDTH))*1;
     private static final int GROUND_Y_OFFSET = -50;
 
     private boolean fall;
@@ -28,15 +27,18 @@ public class PlayState extends State{
     private Vector2 groundPos1, groundPos2, groundPos3, groundPos4;
     private boolean collide;
     private Texture bg, ground, gameover;
+    private Texture score_one, score_ten;
+    private Texture health_one, health_ten;
 
     private Array<Coin> coins;
-    private Array<Tube> tubes;
+    private Array<Obstacle> obstacles;
 
     private Random rand;
     private boolean drag = false;
 
     private int score = 0;
     private double health = 100;
+    private boolean highscore = false;
 
     String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
@@ -59,15 +61,15 @@ public class PlayState extends State{
         gameover = new Texture("gameover.png");
 
         //  Tubes Collection
-        tubes = new Array<Tube>();
+        obstacles = new Array<Obstacle>();
         for (int i = 1 ; i <= TUBE_COUNT; i++){
-            tubes.add(new Tube( i * (TUBE_SPACING+ Tube.TUBE_WIDTH)));
+            obstacles.add(new Obstacle( i * (TUBE_SPACING+ Obstacle.TUBE_WIDTH)));
         }
 
         //  Coins Collection
         coins = new Array<Coin>();
         for (int i = 1 ; i <= COINS_COUNT; i++){
-            coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (TUBE_SPACING + 2 * Tube.TUBE_WIDTH)/2 - Coin.COIN_WIDTH/2));
+            coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (TUBE_SPACING + 2 * Obstacle.TUBE_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
 
         System.out.println(Score.getScore());
@@ -95,11 +97,11 @@ public class PlayState extends State{
             cam.position.x = bird.getPosition().x + 80;
             head.update(dt, cam.position.x);
 
-            for (Tube tube : tubes){
-                if (cam.position.x - (cam.viewportWidth/2) > tube.getPostop().x + tube.getTopTube().getWidth()){
-                    tube.reposition(tube.getPostop().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * 4));
+            for (Obstacle obstacle : obstacles){
+                if (cam.position.x - (cam.viewportWidth/2) > obstacle.getPostop().x + obstacle.getTopTube().getWidth()){
+                    obstacle.reposition(obstacle.getPostop().x + ((Obstacle.TUBE_WIDTH + TUBE_SPACING) * 4));
                 }
-                if(tube.collides(head.getBounds())){
+                if(obstacle.collides(head.getBounds())){
                     collide = true;
                     System.out.println("Gameover");
                 }
@@ -125,24 +127,6 @@ public class PlayState extends State{
                 collide = true;
             }
 
-//            Star Scoring
-            if (collide){
-                if (score > Score.getScore()){
-                    Score.setScore(score);
-                }
-            }
-//            System.out.println(health);
-            //score tubes
-
-//            int tmp = flag % 4;
-//            if (tubes.get(tmp).getPostop().x + Tube.TUBE_WIDTH/2 + 0.5 + bird.getBounds().getWidth()/2 <= bird.getPosition().x
-//                    &&
-//                    tubes.get(tmp).getPostop().x + Tube.TUBE_WIDTH/2 + 3 + bird.getBounds().getWidth()/2>= bird.getPosition().x){
-//
-//                score ++;
-//                System.out.println(score);
-//            }
-
             cam.update();
 
         }else{
@@ -161,8 +145,8 @@ public class PlayState extends State{
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
         sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
 
-        for (Tube tube : tubes){
-            sb.draw(tube.getTopTube(), tube.getPostop().x , tube.getPostop().y);
+        for (Obstacle obstacle : obstacles){
+            sb.draw(obstacle.getTopTube(), obstacle.getPostop().x , obstacle.getPostop().y);
         }
 
         for (Coin c : coins){
@@ -177,13 +161,16 @@ public class PlayState extends State{
 
         //game over
         if (collide){
+            Score.setScore(score);
             sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
 
-            Texture one  = new Texture(number[Score.getScore()%10]);
-            Texture ten = new Texture(number[Score.getScore()/10]);
+            for (Integer i = 0; i < 3; i++){
+                Texture one  = new Texture(number[Score.getScore().get(i)%10]);
+                Texture ten = new Texture(number[Score.getScore().get(i)/10]);
 
-            sb.draw(ten ,cam.position.x - one.getWidth() - 1, cam.viewportHeight/2 - one.getHeight()/2);
-            sb.draw(one ,cam.position.x + 1, cam.viewportHeight/2 - one.getHeight()/2);
+                sb.draw(ten ,cam.position.x - (new Texture(number[0])).getWidth() - 1, cam.viewportHeight/2 - (new Texture(number[0])).getHeight()/2 - (new Texture(number[0])).getHeight()*i);
+                sb.draw(one ,cam.position.x + 1, cam.viewportHeight/2 - (new Texture(number[0])).getHeight()/2 - (new Texture(number[0])).getHeight()*i);
+            }
         }
 
         //score screen
@@ -191,12 +178,12 @@ public class PlayState extends State{
         int indexone = score % 10;
         int indexten = (int) Math.floor(score /10);
 
-        Texture onth = new Texture(number[indexone]);
-        Texture tenth = new Texture(number[indexten]);
+        score_one = new Texture(number[indexone]);
+        score_ten = new Texture(number[indexten]);
 
-        sb.draw(onth ,cam.position.x + 200 , cam.viewportHeight - 50);
+        sb.draw(score_one,cam.position.x + 200 , cam.viewportHeight - 50);
         if (indexten != 0){
-            sb.draw(tenth ,cam.position.x + 200  - tenth.getWidth() - 5 , cam.viewportHeight - 50);
+            sb.draw(score_ten,cam.position.x + 200  - score_ten.getWidth() - 5 , cam.viewportHeight - 50);
         }
 
         //health screen
@@ -204,14 +191,13 @@ public class PlayState extends State{
         int iten = (int) Math.floor((health / 10)%10);
 
         if (iten >=0 && ione >= 0){
-            Texture one  = new Texture(number[ione]);
-//            System.out.println(iten);
-            Texture ten = new Texture(number[iten]);
+            health_one  = new Texture(number[ione]);
+            health_ten = new Texture(number[iten]);
 
-            sb.draw(one ,cam.position.x - cam.viewportWidth/2 + tenth.getWidth() + 10, cam.viewportHeight - 50);
-            sb.draw(ten ,cam.position.x - cam.viewportWidth/2 + 5 , cam.viewportHeight - 50);
+            sb.draw(health_one ,cam.position.x - cam.viewportWidth/2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
+            sb.draw(health_ten ,cam.position.x - cam.viewportWidth/2 + 5 , cam.viewportHeight - 50);
         }else {
-            sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + tenth.getWidth() + 10, cam.viewportHeight - 50);
+            sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + 5, cam.viewportHeight - 50);
         }
         sb.end();
@@ -223,8 +209,14 @@ public class PlayState extends State{
         bg.dispose();
         bird.dispose();
         ground.dispose();
-        for (Tube tube:tubes){
-            tube.dispose();
+        gameover.dispose();
+        score_one.dispose();
+        score_ten.dispose();
+        health_one.dispose();
+        health_ten.dispose();
+
+        for (Obstacle obstacle : obstacles){
+            obstacle.dispose();
         }
         for (Coin c : coins){
             c.dispose();
