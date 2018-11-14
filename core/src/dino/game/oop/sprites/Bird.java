@@ -14,19 +14,13 @@ public class Bird {
     private Vector3 velocity;
     private Animation birdAnimation;
 
-
-
     private boolean fall;
 
     Texture texture = new Texture("birdanimation.png");
 
-
-//    private Texture bird;
-
     public Bird(int x, int y){
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0,0,0);
-//        bird = new Texture("bird.png");
         birdAnimation = new Animation(new TextureRegion(texture), 3,0.5f);
         bounds = new Rectangle(x, y, texture.getWidth()/3, texture.getHeight());
 
@@ -62,10 +56,6 @@ public class Bird {
         return position;
     }
 
-//    public void setPosition(double y){
-////        position.add(0,(float) y,0);
-//        position.y = (float) y;
-//    }
 
     public void setPosition(Vector3 p){
         position = p;

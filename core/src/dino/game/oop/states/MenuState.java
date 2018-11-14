@@ -15,14 +15,12 @@ public class MenuState extends State {
         playBtn = new Texture("play.png");
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
         cam.position.set(0,cam.position.y,0);
-
     }
 
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched()){
             gsm.set(new PlayState(gsm));
-
         }
     }
 

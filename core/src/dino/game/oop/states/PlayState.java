@@ -3,9 +3,7 @@ package dino.game.oop.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.scoring.Score;
@@ -21,7 +19,6 @@ public class PlayState extends State{
     private static final int POTION_SPACING = (OBS_SPACING + Obstacle.OBS_WIDTH) * 5 - Coin.COIN_WIDTH;
     private static final int GROUND_Y_OFFSET = -50;
 
-    private boolean fall;
     private Bird bird;
     private Head head;
     private Vector2 groundPos1, groundPos2, groundPos3, groundPos4;
@@ -35,8 +32,6 @@ public class PlayState extends State{
     private Potion potion;
 
     private Random rand;
-    private boolean drag = false;
-
 
     private int score = 0;
     private double health = 100;
@@ -44,8 +39,6 @@ public class PlayState extends State{
     private boolean set = false;
 
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
-
-//    high score;
 
 
     public PlayState(GameStateManager gsm) {
@@ -77,32 +70,22 @@ public class PlayState extends State{
         }
 
         potion = new Potion((POTION_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2);
-
         System.out.println(Score.getScore());
         collide = false;
         score = 0;
-
     }
 
     @Override
     protected void handleInput() {
-        double campos = cam.position.x + 25 - cam.viewportWidth/2;
-//        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-//        cam.unproject(touchPos);
         if(Gdx.input.justTouched() && !collide) {
             bird.jump();
             bird.setFall(true);
             System.out.println("Touch");
 
         }else if(Gdx.input.justTouched()) {
-//        }else if(touchPos.x > campos - gameover.getWidth()/2 && touchPos.x < gameover.getWidth()/2 + campos%DinoGame.WIDTH + gameover.getWidth()){
             gsm.set(new PlayState(gsm));
-//            bird.jump();
-//            collide = false;
         }
-
     }
-
 
     @Override
     public void update(float dt) {
@@ -113,17 +96,14 @@ public class PlayState extends State{
             cam.position.x = bird.getPosition().x + 80;
             head.update(dt, cam.position.x);
 
-
             for (Obstacle obstacle : obstacles){
                 if (cam.position.x - (cam.viewportWidth/2) > obstacle.getPostop().x + obstacle.getTopTube().getWidth()){
                     obstacle.reposition(obstacle.getPostop().x + ((Obstacle.OBS_WIDTH + OBS_SPACING) * 4));
-
                 }
                 if(obstacle.collides(head.getBounds())){
                     collide = true;
                     System.out.println(score);
                 }
-
             }
 
             for (Coin c : coins){
@@ -150,7 +130,6 @@ public class PlayState extends State{
 
             health = health - 0.1;
             if (health <=  0){
-
                 collide = true;
             }
 
@@ -276,8 +255,4 @@ public class PlayState extends State{
         }
     }
 
-//    public boolean collides(){
-//        return player.overlaps(boundsTop) || player.overlaps(boundsBottom);
-//
-//    }
 }

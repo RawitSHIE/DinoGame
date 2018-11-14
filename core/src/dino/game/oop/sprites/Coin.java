@@ -21,9 +21,7 @@ public class Coin {
     public Coin(float x){
         coins  = new Texture("coin.png");
         rand = new Random();
-
         poscoins = new Vector2(x ,rand.nextInt(FLUCTUATION) + LOWEST_OPENING);
-
         boundsCoin = new Rectangle(poscoins.x, poscoins.y, coins.getWidth(), coins.getHeight());
     }
 
@@ -31,21 +29,17 @@ public class Coin {
         return coins;
     }
 
-
     public Vector2 getPoscoins() {
         return poscoins;
     }
 
-
     public void reposition(float x){
         poscoins.set(x, rand.nextInt(FLUCTUATION) + COIN_GAB + LOWEST_OPENING);
         boundsCoin.setPosition(poscoins.x, poscoins.y);
-
     }
 
     public boolean collides(Rectangle player){
         return player.overlaps(boundsCoin);
-
     }
 
     public void dispose(){

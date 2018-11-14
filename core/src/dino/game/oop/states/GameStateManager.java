@@ -22,13 +22,10 @@ public class GameStateManager {
         this.states.pop().dispose();
         this.states.push(state);
         this.states.peek();
-
-
     }
 
     public void update(float dt){
         this.states.peek().update(dt);
-
     }
 
     public void render(SpriteBatch sb){

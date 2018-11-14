@@ -21,29 +21,23 @@ public class EndGameState extends State{
         super(gsm);
         background = new Texture("day.png");
         gameover = new Texture("gameover.png");
-
         ground = new Texture("ground.png");
         cam.setToOrtho(false, DinoGame.WIDTH / 2, DinoGame.HEIGHT / 2);
-
         groundPos1 = new Vector2(cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2(cam.viewportWidth/2 + ground.getWidth() , GROUND_Y_OFFSET);
         cam.position.x = 0;
-
     }
 
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched()){
             gsm.set(new PlayState(gsm));
-
         }
     }
 
     @Override
     public void update(float dt) {
         handleInput();
-//        updateGround();
-
     }
 
     @Override
