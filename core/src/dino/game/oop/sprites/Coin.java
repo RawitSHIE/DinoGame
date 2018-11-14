@@ -10,7 +10,7 @@ public class Coin {
     public static final int COIN_WIDTH = 32;
 
     private static final int FLUCTUATION = 130;
-    private static final int TUBE_GAB = 100;
+    private static final int COIN_GAB = 100;
     private static final int LOWEST_OPENING = 100;
 
     private Rectangle boundsCoin;
@@ -38,7 +38,7 @@ public class Coin {
 
 
     public void reposition(float x){
-        poscoins.set(x, rand.nextInt(FLUCTUATION) + TUBE_GAB + LOWEST_OPENING);
+        poscoins.set(x, rand.nextInt(FLUCTUATION) + COIN_GAB + LOWEST_OPENING);
         boundsCoin.setPosition(poscoins.x, poscoins.y);
 
     }

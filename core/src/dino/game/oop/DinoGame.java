@@ -24,7 +24,7 @@ public class DinoGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
 //		img = new Texture("badlogic.jpg");
-		Gdx.gl.glClearColor(0, 1, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		gsm.push(new MenuState(gsm));
 
 	}

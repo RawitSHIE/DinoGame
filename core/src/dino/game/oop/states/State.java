@@ -15,6 +15,12 @@ public abstract class State {
         this.mouse = new Vector3();
 
     }
+    protected State(GameStateManager gsm, float x, float y){
+        this.gsm = gsm;
+        this.cam = new OrthographicCamera(x,y);
+        this.mouse = new Vector3();
+
+    }
 
     protected abstract void handleInput();
     public abstract void update(float dt);
