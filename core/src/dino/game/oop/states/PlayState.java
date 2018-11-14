@@ -94,7 +94,6 @@ public class PlayState extends State{
                 }
 
                 if(tube.collides(bird.getBounds())){
-//                    gsm.set(new EndGameState(gsm));
                     collide = true;
                     System.out.println(score);
                 }
@@ -112,7 +111,6 @@ public class PlayState extends State{
 //            System.out.println(tubes.get(tmp).getPostop().x + " " + bird.getPosition().x);
 
             if (bird.getPosition().y < ground.getHeight() + GROUND_Y_OFFSET){
-//                gsm.set(new EndGameState(gsm));
                 collide = true;
                 System.out.println("Gameover");
             }
