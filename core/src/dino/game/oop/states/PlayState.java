@@ -1,7 +1,9 @@
 package dino.game.oop.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -29,6 +31,8 @@ public class PlayState extends State{
     private Texture score_one, score_ten;
     private Texture health_one, health_ten, bar, bgh;
     private Texture board;
+    private Texture one, ten, rank;
+
 
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
@@ -40,7 +44,8 @@ public class PlayState extends State{
     private double health = 100;
     private boolean highscore = false;
     private boolean set = false;
-    private SpriteBatch batch;
+
+    private BitmapFont font;
 
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
@@ -53,15 +58,13 @@ public class PlayState extends State{
         ground = new Texture("new-ground.png");
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,20);
-        batch = new SpriteBatch();
         bgh = new Texture("white-dot.png");
         board = new Texture("White-dot.png");
+        font = new BitmapFont();
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
-//        groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
-//        groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
         gameover = new Texture("gameover.png");
 
         //  Obs Collection
@@ -173,8 +176,6 @@ public class PlayState extends State{
         //draw ground
         sb.draw(ground ,groundPos1.x, groundPos1.y);
         sb.draw(ground ,groundPos2.x, groundPos2.y);
-//        sb.draw(ground ,groundPos3.x, groundPos3.y);
-//        sb.draw(ground ,groundPos4.x, groundPos4.y);
 
         //game over
         if (collide){
@@ -182,55 +183,120 @@ public class PlayState extends State{
                 Score.setScore(score);
                 set = true;
             }
-            // bg-ground
-            sb.draw(board, cam.position.x-100, cam.position.y-75, 200,150);
 
-            sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
+            // bg-ground
+            sb.draw(board,
+                    cam.position.x-100,
+                    cam.position.y-75,
+                    200,
+                    150);
+
+            sb.draw(gameover,
+                    cam.position.x - gameover.getWidth()/2,
+                    cam.viewportHeight/2 + 10);
 
             for (Integer i = 0; i < 3; i++){
-                Texture one  = new Texture(number[Score.getScore().get(i)%10]);
-                Texture ten = new Texture(number[Score.getScore().get(i)/10]);
-                Texture rank = new Texture(number[i+1]);
+                one  = new Texture(number[Score.getScore().get(i)%10]);
+                ten = new Texture(number[Score.getScore().get(i)/10]);
+                rank = new Texture(number[i+1]);
+
+                // Draw Score
+                int indexone = score % 10;
+                int indexten = (int) Math.floor(score/10);
+
+                score_one = new Texture(number[indexone]);
+                score_ten = new Texture(number[indexten]);
+
+                sb.draw(score_one,
+                        cam.position.x - 60 + NUM_WIDTH ,
+                        cam.viewportHeight/2 - gameover.getHeight() - 10);
+                if (indexten != 0){
+                    sb.draw(score_ten,
+                            cam.position.x - 60,
+                            cam.viewportHeight/2 - gameover.getHeight() - 10);
+                }
+
                 // Draw Rank
-                sb.draw(rank ,cam.position.x - NUM_WIDTH - 10, cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
-                sb.draw(ten ,cam.position.x - NUM_WIDTH/2 , cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
-                sb.draw(one ,cam.position.x, cam.viewportHeight/2-gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
+                font.setColor(Color.RED);
+                font.draw(sb,
+                        "RANK",
+                        cam.position.x + 100 - (NUM_WIDTH/2)*5,
+                        cam.viewportHeight/2);
+                sb.draw(rank ,
+                        cam.position.x + 100 - (NUM_WIDTH*2 + NUM_WIDTH/2) - 2,
+                        cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i + 10,
+                        NUM_WIDTH/2,
+                        NUM_HEIGHT/2);
+                sb.draw(ten ,
+                        cam.position.x + 100 - (NUM_WIDTH + NUM_WIDTH/2) - 2,
+                        cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i + 10,
+                        NUM_WIDTH/2,
+                        NUM_HEIGHT/2);
+                sb.draw(one ,
+                        cam.position.x + 100 - NUM_WIDTH - 2,
+                        cam.viewportHeight/2-gameover.getHeight() - NUM_HEIGHT/2*i + 10,
+                        NUM_WIDTH/2,
+                        NUM_HEIGHT/2);
             }
         }
 
         //score screen
-        int indexone = score % 10;
-        int indexten = (int) Math.floor(score/10);
 
-        score_one = new Texture(number[indexone]);
-        score_ten = new Texture(number[indexten]);
+        else {
+            int indexone = score % 10;
+            int indexten = (int) Math.floor(score/10);
 
-        sb.draw(score_one,cam.position.x + 200 , cam.viewportHeight - 50);
-        if (indexten != 0){
-            sb.draw(score_ten,cam.position.x + 200  - score_ten.getWidth() - 5 , cam.viewportHeight - 50);
+            score_one = new Texture(number[indexone]);
+            score_ten = new Texture(number[indexten]);
+            sb.draw(score_one,
+                    cam.position.x + 200 ,
+                    cam.viewportHeight - 50);
+            if (indexten != 0){
+                sb.draw(score_ten,
+                        cam.position.x + 200  - score_ten.getWidth() - 5 ,
+                        cam.viewportHeight - 50);
+            }
         }
 
-        //health screen
-        int ione = (int) health % 10;
-        int iten = (int) Math.floor((health / 10)%10);
-
-        if (iten >=0 && ione >= 0){
-            health_one  = new Texture(number[ione]);
-            health_ten = new Texture(number[iten]);
-
-            sb.draw(health_one ,cam.position.x - cam.viewportWidth/2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
-            sb.draw(health_ten ,cam.position.x - cam.viewportWidth/2 + 5 , cam.viewportHeight - 50);
-        }else {
-            sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
-            sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + 5, cam.viewportHeight - 50);
-        }
+//        //health screen
+//        int ione = (int) health % 10;
+//        int iten = (int) Math.floor((health / 10)%10);
+//
+//        if (iten >=0 && ione >= 0){
+//            health_one  = new Texture(number[ione]);
+//            health_ten = new Texture(number[iten]);
+//
+//            sb.draw(health_one ,
+//                    cam.position.x - cam.viewportWidth/2 + score_ten.getWidth() + 10,
+//                    cam.viewportHeight - 50);
+//            sb.draw(health_ten ,
+//                    cam.position.x - cam.viewportWidth/2 + 5 ,
+//                    cam.viewportHeight - 50);
+//        }else {
+//            sb.draw(new Texture("0.png"),
+//                    cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10,
+//                    cam.viewportHeight - 50);
+//            sb.draw(new Texture("0.png"),
+//                    cam.position.x - cam.viewportWidth / 2 + 5,
+//                    cam.viewportHeight - 50);
+//        }
 
         // health Progress bar
         float ratio = (float) health/100;
-        sb.draw(bgh, cam.position.x - cam.viewportWidth/2 + 19, cam.position.y - cam.viewportHeight/4 ,12, cam.viewportHeight/2);
-        sb.draw(bar, cam.position.x - cam.viewportWidth/2 + 20, cam.position.y - cam.viewportHeight/4 ,10, cam.viewportHeight/2 * ratio );
+        sb.draw(bgh,
+                cam.position.x - cam.viewportWidth/2 + 19,
+                cam.position.y - cam.viewportHeight/4 ,
+                12,
+                cam.viewportHeight/2);
+        sb.draw(bar,
+                cam.position.x - cam.viewportWidth/2 + 20,
+                cam.position.y - cam.viewportHeight/4 ,
+                10,
+                cam.viewportHeight/2 * ratio );
 
-        sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
+        sb.draw(potion.getPotions(),
+                potion.getPospotions().x,
+                potion.getPospotions().y);
 
         sb.end();
     }
@@ -244,11 +310,15 @@ public class PlayState extends State{
         gameover.dispose();
         score_one.dispose();
         score_ten.dispose();
-        health_one.dispose();
-        health_ten.dispose();
+//        health_one.dispose();
+//        health_ten.dispose();
         bar.dispose();
         bgh.dispose();
         board.dispose();
+        one.dispose();
+        ten.dispose();
+        rank.dispose();
+        potion.dispose();
 
         for (Obstacle obstacle : obstacles){
             obstacle.dispose();
@@ -256,7 +326,6 @@ public class PlayState extends State{
         for (Coin c : coins){
             c.dispose();
         }
-        potion.dispose();
 
         System.out.println("PlayState Dispose");
     }
@@ -269,12 +338,6 @@ public class PlayState extends State{
         if (cam.position.x - cam.viewportWidth/2 > groundPos2.x + ground.getWidth()){
             groundPos2.add(ground.getWidth()*2, 0);
         }
-//        if (cam.position.x - cam.viewportWidth/2 > groundPos3.x + ground.getWidth()) {
-//            groundPos3.add(ground.getWidth()*4, 0);
-//        }
-//        if (cam.position.x - cam.viewportWidth/2 > groundPos4.x + ground.getWidth()){
-//            groundPos4.add(ground.getWidth()*4, 0);
-//        }
     }
 
 }
