@@ -7,18 +7,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.scoring.Score;
-import dino.game.oop.sprites.Bird;
-import dino.game.oop.sprites.Coin;
-import dino.game.oop.sprites.Head;
-import dino.game.oop.sprites.Obstacle;
+import dino.game.oop.sprites.*;
 
 import java.util.Random;
 
 public class PlayState extends State{
-    private static final int TUBE_SPACING = 125;
-    private static final int TUBE_COUNT = 4;
+    private static final int OBS_SPACING = 125;
+    private static final int OBS_COUNT = 4;
     private static final int COINS_COUNT = 6;
-    private static final int COINS_SPACING = (TUBE_SPACING + (Obstacle.TUBE_WIDTH - Coin.COIN_WIDTH))*1;
+    private static final int COINS_SPACING = (OBS_SPACING + (Obstacle.OBS_WIDTH - Coin.COIN_WIDTH))*1;
+    private static final int POTION_SPACING = (OBS_SPACING + Obstacle.OBS_WIDTH) * 5 - Coin.COIN_WIDTH;
     private static final int GROUND_Y_OFFSET = -50;
 
     private boolean fall;
@@ -32,6 +30,7 @@ public class PlayState extends State{
 
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
+    private Potion potion;
 
     private Random rand;
     private boolean drag = false;
@@ -39,17 +38,18 @@ public class PlayState extends State{
     private int score = 0;
     private double health = 100;
     private boolean highscore = false;
+    private boolean set = false;
 
-    String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
+    private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
 //    high score;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
-        cam.setToOrtho(false, DinoGame.WIDTH /2, DinoGame.HEIGHT/2 );
-        bg = new Texture("day.png");
+        cam.setToOrtho(false, DinoGame.WIDTH/2 , DinoGame.HEIGHT/2 );
+        bg = new Texture("bg-play.png");
         rand = new Random();
-        ground = new Texture("ground.png");
+        ground = new Texture("new-ground.png");
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,20);
 
@@ -60,17 +60,19 @@ public class PlayState extends State{
         groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
         gameover = new Texture("gameover.png");
 
-        //  Tubes Collection
+        //  Obs Collection
         obstacles = new Array<Obstacle>();
-        for (int i = 1 ; i <= TUBE_COUNT; i++){
-            obstacles.add(new Obstacle( i * (TUBE_SPACING+ Obstacle.TUBE_WIDTH)));
+        for (int i = 1; i <= OBS_COUNT; i++){
+            obstacles.add(new Obstacle( i * (OBS_SPACING + Obstacle.OBS_WIDTH)));
         }
 
         //  Coins Collection
         coins = new Array<Coin>();
         for (int i = 1 ; i <= COINS_COUNT; i++){
-            coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (TUBE_SPACING + 2 * Obstacle.TUBE_WIDTH)/2 - Coin.COIN_WIDTH/2));
+            coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
+
+        potion = new Potion((POTION_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2);
 
         System.out.println(Score.getScore());
         collide = false;
@@ -99,7 +101,7 @@ public class PlayState extends State{
 
             for (Obstacle obstacle : obstacles){
                 if (cam.position.x - (cam.viewportWidth/2) > obstacle.getPostop().x + obstacle.getTopTube().getWidth()){
-                    obstacle.reposition(obstacle.getPostop().x + ((Obstacle.TUBE_WIDTH + TUBE_SPACING) * 4));
+                    obstacle.reposition(obstacle.getPostop().x + ((Obstacle.OBS_WIDTH + OBS_SPACING) * 4));
                 }
                 if(obstacle.collides(head.getBounds())){
                     collide = true;
@@ -114,11 +116,18 @@ public class PlayState extends State{
                 if (c.collides(head.getBounds())){
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING)  * COINS_COUNT));
                     score ++;
-                    if (health + 10 >= 100){
-                        health = 99;
-                    }else{
-                        health += 10;
-                    }
+                }
+            }
+
+            if (cam.position.x - (cam.viewportWidth/2) > potion.getPospotions().x + potion.getPotions().getWidth()){
+                potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
+            }
+            if (potion.collides(head.getBounds())){
+                potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
+                if (health + 10 >= 100){
+                    health = 99;
+                }else{
+                    health += 20;
                 }
             }
 
@@ -159,9 +168,13 @@ public class PlayState extends State{
         sb.draw(ground ,groundPos3.x, groundPos3.y);
         sb.draw(ground ,groundPos4.x, groundPos4.y);
 
+
         //game over
         if (collide){
-            Score.setScore(score);
+            if (set == false){
+                Score.setScore(score);
+                set = true;
+            }
             sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
 
             for (Integer i = 0; i < 3; i++){
@@ -200,6 +213,9 @@ public class PlayState extends State{
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + 5, cam.viewportHeight - 50);
         }
+
+        sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
+
         sb.end();
     }
 
@@ -221,6 +237,8 @@ public class PlayState extends State{
         for (Coin c : coins){
             c.dispose();
         }
+        potion.dispose();
+
         System.out.println("PlayState Dispose");
     }
 

@@ -21,6 +21,7 @@ public class GameStateManager {
     public void set(State state){
         this.states.pop().dispose();
         this.states.push(state);
+        this.states.peek();
 
 
     }

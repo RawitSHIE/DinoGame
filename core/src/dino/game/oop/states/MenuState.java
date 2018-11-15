@@ -11,10 +11,14 @@ public class MenuState extends State {
 
     public MenuState(GameStateManager gsm) {
         super(gsm);
+<<<<<<< HEAD
         background = new Texture("cave-bg.png");
+=======
+        background = new Texture("bg.png");
+>>>>>>> 90eb68801748b2c5696c06d9ff00e782bd51bf55
         playBtn = new Texture("play.png");
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
-        cam.position.x = 0;
+        cam.position.set(0,cam.position.y,0);
 
     }
 
