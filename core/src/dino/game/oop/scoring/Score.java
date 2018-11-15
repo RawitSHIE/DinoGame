@@ -52,7 +52,8 @@ public class Score {
         return null;
     }
 
-    public static void setScore(Integer score){
+    public static boolean setScore(Integer score){
+        boolean highscore = false;
         try {
             rank = getScore();
             Collections.sort(rank);
@@ -61,10 +62,14 @@ public class Score {
             printWriter = new PrintWriter(fileWriter);
 
             for (int i = 0; i < rank.size(); i++){
+
                 if (rank.get(i) == score){
                     break;
                 }
                 if (rank.get(i) < score){
+                    if (i == 0){
+                        highscore  = true;
+                    }
                     rank.add(score);
                     Collections.sort(rank);
                     Collections.reverse(rank);
@@ -87,6 +92,7 @@ public class Score {
                 e.printStackTrace();
             }
         }
+        return highscore;
     }
 
     public static void main(String[] args) {

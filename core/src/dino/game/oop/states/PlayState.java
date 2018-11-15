@@ -33,7 +33,6 @@ public class PlayState extends State{
     private Texture board;
     private Texture one, ten, rank;
 
-
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
     private Potion potion;
@@ -42,10 +41,11 @@ public class PlayState extends State{
 
     private int score = 0;
     private double health = 100;
-    private boolean highscore = false;
+    private boolean ishighscore = false;
     private boolean set = false;
 
-    private BitmapFont font;
+    private BitmapFont ranktxt;
+    private BitmapFont highscore;
 
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
@@ -60,7 +60,8 @@ public class PlayState extends State{
         head = new Head(20,20);
         bgh = new Texture("white-dot.png");
         board = new Texture("White-dot.png");
-        font = new BitmapFont();
+        ranktxt = new BitmapFont();
+        highscore = new BitmapFont();
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -179,8 +180,8 @@ public class PlayState extends State{
 
         //game over
         if (collide){
-            if (set == false){
-                Score.setScore(score);
+            if (!set){
+                ishighscore = Score.setScore(score);
                 set = true;
             }
 
@@ -201,6 +202,14 @@ public class PlayState extends State{
                 rank = new Texture(number[i+1]);
 
                 // Draw Score
+                if (ishighscore){
+                    highscore.setColor(Color.RED);
+                    highscore.draw(sb,
+                        "Highscore!!",
+                        cam.position.x  - 70,
+                        cam.viewportHeight/2);
+                }
+
                 int indexone = score % 10;
                 int indexten = (int) Math.floor(score/10);
 
@@ -217,8 +226,8 @@ public class PlayState extends State{
                 }
 
                 // Draw Rank
-                font.setColor(Color.RED);
-                font.draw(sb,
+                ranktxt.setColor(Color.RED);
+                ranktxt.draw(sb,
                         "RANK",
                         cam.position.x + 100 - (NUM_WIDTH/2)*5,
                         cam.viewportHeight/2);
@@ -242,20 +251,18 @@ public class PlayState extends State{
 
         //score screen
 
-        else {
-            int indexone = score % 10;
-            int indexten = (int) Math.floor(score/10);
+        int indexone = score % 10;
+        int indexten = (int) Math.floor(score/10);
 
-            score_one = new Texture(number[indexone]);
-            score_ten = new Texture(number[indexten]);
-            sb.draw(score_one,
-                    cam.position.x + 200 ,
+        score_one = new Texture(number[indexone]);
+        score_ten = new Texture(number[indexten]);
+        sb.draw(score_one,
+                cam.position.x + 200 ,
+                cam.viewportHeight - 50);
+        if (indexten != 0){
+            sb.draw(score_ten,
+                    cam.position.x + 200  - score_ten.getWidth() - 5 ,
                     cam.viewportHeight - 50);
-            if (indexten != 0){
-                sb.draw(score_ten,
-                        cam.position.x + 200  - score_ten.getWidth() - 5 ,
-                        cam.viewportHeight - 50);
-            }
         }
 
 //        //health screen
