@@ -49,6 +49,8 @@ public class PlayState extends State {
 
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
+    private Texture playbtn, menubtn;
+
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -62,6 +64,8 @@ public class PlayState extends State {
         board = new Texture("White-dot.png");
         ranktxt = new BitmapFont();
         highscore = new BitmapFont();
+        playbtn  = new Texture("play.png");
+        menubtn = new Texture("menu.png");
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -245,6 +249,19 @@ public class PlayState extends State {
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
             }
+
+            // endgame btn
+            sb.draw(playbtn,
+                    cam.position.x - playbtn.getWidth()/2 - (menubtn.getWidth()/4 - 20) ,
+                    cam.position.y - playbtn.getHeight()/2 - 80,
+                    playbtn.getWidth()/2,
+                    playbtn.getHeight()/2);
+
+            sb.draw(menubtn,
+                    cam.position.x +  menubtn.getWidth()/2 - (menubtn.getWidth()/4 + 20) ,
+                    cam.position.y - menubtn.getHeight()/2 - 80,
+                    menubtn.getWidth()/2,
+                    menubtn.getHeight()/2);
         }
 
         //score screen
@@ -324,6 +341,8 @@ public class PlayState extends State {
         ten.dispose();
         rank.dispose();
         potion.dispose();
+        playbtn.dispose();
+        menubtn.dispose();
 
         for (Obstacle obstacle : obstacles){
             obstacle.dispose();
