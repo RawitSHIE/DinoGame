@@ -9,6 +9,7 @@ import dino.game.oop.DinoGame;
 import dino.game.oop.scoring.Score;
 import dino.game.oop.sprites.*;
 
+import javax.xml.soap.Text;
 import java.util.Random;
 
 public class PlayState extends State{
@@ -18,6 +19,8 @@ public class PlayState extends State{
     private static final int COINS_SPACING = (OBS_SPACING + (Obstacle.OBS_WIDTH - Coin.COIN_WIDTH))*1;
     private static final int POTION_SPACING = (OBS_SPACING + Obstacle.OBS_WIDTH) * 5 - Coin.COIN_WIDTH;
     private static final int GROUND_Y_OFFSET = -50;
+    private static final int NUM_WIDTH = 24;
+    private static final int NUM_HEIGHT = 36;
 
     private Bird bird;
     private Head head;
@@ -26,6 +29,7 @@ public class PlayState extends State{
     private Texture bg, ground, gameover;
     private Texture score_one, score_ten;
     private Texture health_one, health_ten, bar, bgh;
+    private Texture board;
 
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
@@ -52,12 +56,13 @@ public class PlayState extends State{
         head = new Head(20,20);
         batch = new SpriteBatch();
         bgh = new Texture("white-dot.png");
+        board = new Texture("White-dot.png");
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
-        groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
-        groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
+//        groundPos3 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*2, GROUND_Y_OFFSET);
+//        groundPos4 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth()*3, GROUND_Y_OFFSET);
         gameover = new Texture("gameover.png");
 
         //  Obs Collection
@@ -72,7 +77,7 @@ public class PlayState extends State{
             coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
 
-//        bar
+        // bar
         bar = new Texture("dot.png");
 
         potion = new Potion((POTION_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2);
@@ -157,6 +162,7 @@ public class PlayState extends State{
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
         sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
 
+
         for (Obstacle obstacle : obstacles){
             sb.draw(obstacle.getTopTube(), obstacle.getPostop().x , obstacle.getPostop().y);
         }
@@ -168,8 +174,8 @@ public class PlayState extends State{
         //draw ground
         sb.draw(ground ,groundPos1.x, groundPos1.y);
         sb.draw(ground ,groundPos2.x, groundPos2.y);
-        sb.draw(ground ,groundPos3.x, groundPos3.y);
-        sb.draw(ground ,groundPos4.x, groundPos4.y);
+//        sb.draw(ground ,groundPos3.x, groundPos3.y);
+//        sb.draw(ground ,groundPos4.x, groundPos4.y);
 
         //game over
         if (collide){
@@ -177,13 +183,19 @@ public class PlayState extends State{
                 Score.setScore(score);
                 set = true;
             }
+            // bg-ground
+            sb.draw(board, cam.position.x-100, cam.position.y-75, 200,150);
+
             sb.draw(gameover, cam.position.x - gameover.getWidth()/2, cam.viewportHeight/2);
+
             for (Integer i = 0; i < 3; i++){
                 Texture one  = new Texture(number[Score.getScore().get(i)%10]);
                 Texture ten = new Texture(number[Score.getScore().get(i)/10]);
-
-                sb.draw(ten ,cam.position.x - (new Texture(number[0])).getWidth() - 1, cam.viewportHeight/2 - (new Texture(number[0])).getHeight()/2 - (new Texture(number[0])).getHeight()*i);
-                sb.draw(one ,cam.position.x + 1, cam.viewportHeight/2 - (new Texture(number[0])).getHeight()/2 - (new Texture(number[0])).getHeight()*i);
+                Texture rank = new Texture(number[i+1]);
+                // Draw Rank
+                sb.draw(rank ,cam.position.x - NUM_WIDTH - 2, cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
+                sb.draw(ten ,cam.position.x - NUM_WIDTH/2 , cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
+                sb.draw(one ,cam.position.x, cam.viewportHeight/2-gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
             }
         }
 
@@ -213,7 +225,7 @@ public class PlayState extends State{
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10, cam.viewportHeight - 50);
             sb.draw(new Texture("0.png"), cam.position.x - cam.viewportWidth / 2 + 5, cam.viewportHeight - 50);
         }
-        
+
         // health Progress bar
         float ratio = (float) health/100;
         sb.draw(bgh, cam.position.x - cam.viewportWidth/2 + 19, cam.position.y - cam.viewportHeight/4 ,12, cam.viewportHeight/2);
@@ -237,6 +249,7 @@ public class PlayState extends State{
         health_ten.dispose();
         bar.dispose();
         bgh.dispose();
+        board.dispose();
 
         for (Obstacle obstacle : obstacles){
             obstacle.dispose();
@@ -252,17 +265,17 @@ public class PlayState extends State{
     //for Update ground over and over
     public void updateGround(){
         if (cam.position.x - cam.viewportWidth/2 > groundPos1.x + ground.getWidth()){
-            groundPos1.add(ground.getWidth()*4, 0);
+            groundPos1.add(ground.getWidth()*2, 0);
         }
         if (cam.position.x - cam.viewportWidth/2 > groundPos2.x + ground.getWidth()){
-            groundPos2.add(ground.getWidth()*4, 0);
+            groundPos2.add(ground.getWidth()*2, 0);
         }
-        if (cam.position.x - cam.viewportWidth/2 > groundPos3.x + ground.getWidth()) {
-            groundPos3.add(ground.getWidth()*4, 0);
-        }
-        if (cam.position.x - cam.viewportWidth/2 > groundPos4.x + ground.getWidth()){
-            groundPos4.add(ground.getWidth()*4, 0);
-        }
+//        if (cam.position.x - cam.viewportWidth/2 > groundPos3.x + ground.getWidth()) {
+//            groundPos3.add(ground.getWidth()*4, 0);
+//        }
+//        if (cam.position.x - cam.viewportWidth/2 > groundPos4.x + ground.getWidth()){
+//            groundPos4.add(ground.getWidth()*4, 0);
+//        }
     }
 
 }
