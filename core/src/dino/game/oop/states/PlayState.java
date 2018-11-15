@@ -9,7 +9,6 @@ import dino.game.oop.DinoGame;
 import dino.game.oop.scoring.Score;
 import dino.game.oop.sprites.*;
 
-import javax.xml.soap.Text;
 import java.util.Random;
 
 public class PlayState extends State{
@@ -193,7 +192,7 @@ public class PlayState extends State{
                 Texture ten = new Texture(number[Score.getScore().get(i)/10]);
                 Texture rank = new Texture(number[i+1]);
                 // Draw Rank
-                sb.draw(rank ,cam.position.x - NUM_WIDTH - 2, cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
+                sb.draw(rank ,cam.position.x - NUM_WIDTH - 10, cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
                 sb.draw(ten ,cam.position.x - NUM_WIDTH/2 , cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
                 sb.draw(one ,cam.position.x, cam.viewportHeight/2-gameover.getHeight() - NUM_HEIGHT/2*i,NUM_WIDTH/2,NUM_HEIGHT/2);
             }
