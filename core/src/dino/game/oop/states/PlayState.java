@@ -13,7 +13,7 @@ import dino.game.oop.sprites.*;
 
 import java.util.Random;
 
-public class PlayState extends State{
+public class PlayState extends State {
     private static final int OBS_SPACING = 125;
     private static final int OBS_COUNT = 4;
     private static final int COINS_COUNT = 6;
@@ -92,9 +92,7 @@ public class PlayState extends State{
     @Override
     protected void handleInput() {
         if(Gdx.input.justTouched() && !collide) {
-            bird.jump();
-            bird.setFall(true);
-            System.out.println("Touch");
+//            System.out.println("Touch");
 
         }else if(Gdx.input.justTouched()) {
             gsm.set(new PlayState(gsm));
@@ -346,5 +344,6 @@ public class PlayState extends State{
             groundPos2.add(ground.getWidth()*2, 0);
         }
     }
+
 
 }
