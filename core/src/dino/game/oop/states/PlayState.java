@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.scoring.Score;
 import dino.game.oop.sprites.*;
-
 import java.util.Random;
 
 public class PlayState extends State {
@@ -51,10 +50,9 @@ public class PlayState extends State {
 
     private Texture playbtn, menubtn;
 
-
     public PlayState(GameStateManager gsm) {
         super(gsm);
-        cam.setToOrtho(false, DinoGame.WIDTH/2 , DinoGame.HEIGHT/2 );
+        cam.setToOrtho(false, DinoGame.WIDTH/2 , DinoGame.HEIGHT/2);
         bg = new Texture("bg-play.png");
         rand = new Random();
         ground = new Texture("new-ground.png");
@@ -62,6 +60,7 @@ public class PlayState extends State {
         head = new Head(20,20);
         bgh = new Texture("white-dot.png");
         board = new Texture("White-dot.png");
+
         ranktxt = new BitmapFont();
         highscore = new BitmapFont();
         playbtn  = new Texture("play.png");
@@ -86,7 +85,6 @@ public class PlayState extends State {
 
         // bar
         bar = new Texture("dot.png");
-
         potion = new Potion((POTION_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2);
         System.out.println(Score.getScore());
         collide = false;
@@ -99,7 +97,7 @@ public class PlayState extends State {
 //            System.out.println("Touch");
 
         }else if(Gdx.input.justTouched()) {
-            gsm.set(new PlayState(gsm));
+            gsm.set(new MenuState(gsm));
         }
     }
 
@@ -124,10 +122,10 @@ public class PlayState extends State {
 
             for (Coin c : coins){
                 if (cam.position.x - (cam.viewportWidth/2) > c.getPoscoins().x + c.getCoins().getWidth()){
-                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING)  * COINS_COUNT));
+                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
                 }
                 if (c.collides(head.getBounds())){
-                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING)  * COINS_COUNT));
+                    c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
                     score ++;
                 }
             }
@@ -156,7 +154,9 @@ public class PlayState extends State {
             head.updateAnimation(dt);
         }
 
+
     }
+
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
@@ -166,7 +166,6 @@ public class PlayState extends State {
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
         sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
-
 
         for (Obstacle obstacle : obstacles){
             sb.draw(obstacle.getTopobs(), obstacle.getPostop().x , obstacle.getPostop().y);
@@ -263,6 +262,7 @@ public class PlayState extends State {
                     cam.position.y - menubtn.getHeight()/2 - 80,
                     menubtn.getWidth()/2,
                     menubtn.getHeight()/2);
+
         }
 
         //score screen
@@ -281,7 +281,6 @@ public class PlayState extends State {
                     cam.viewportHeight - 50);
         }
 
-
         // health Progress bar
         float ratio = (float) health/100;
         sb.draw(bgh,
@@ -294,11 +293,9 @@ public class PlayState extends State {
                 cam.position.y - cam.viewportHeight/4 ,
                 10,
                 cam.viewportHeight/2 * ratio );
-
         sb.draw(potion.getPotions(),
                 potion.getPospotions().x,
                 potion.getPospotions().y);
-
         sb.end();
     }
 
@@ -340,6 +337,4 @@ public class PlayState extends State {
             groundPos2.add(ground.getWidth()*2, 0);
         }
     }
-
-
 }
