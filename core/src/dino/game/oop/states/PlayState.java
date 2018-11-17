@@ -25,11 +25,11 @@ public class PlayState extends State {
 
     private Bird bird;
     private Head head;
-    private Vector2 groundPos1, groundPos2, groundPos3, groundPos4;
+    private Vector2 groundPos1, groundPos2;
     private boolean collide;
     private Texture bg, ground, gameover;
     private Texture score_one, score_ten;
-    private Texture health_one, health_ten, bar, bgh;
+    private Texture bar, bgh;
     private Texture board;
     private Texture one, ten, rank;
 
@@ -113,7 +113,7 @@ public class PlayState extends State {
             head.update(dt, cam.position.x);
 
             for (Obstacle obstacle : obstacles){
-                if (cam.position.x - (cam.viewportWidth/2) > obstacle.getPostop().x + obstacle.getTopTube().getWidth()){
+                if (cam.position.x - (cam.viewportWidth/2) > obstacle.getPostop().x + obstacle.getTopobs().getWidth()){
                     obstacle.reposition(obstacle.getPostop().x + ((Obstacle.OBS_WIDTH + OBS_SPACING) * 4));
                 }
                 if(obstacle.collides(head.getBounds())){
@@ -169,7 +169,8 @@ public class PlayState extends State {
 
 
         for (Obstacle obstacle : obstacles){
-            sb.draw(obstacle.getTopTube(), obstacle.getPostop().x , obstacle.getPostop().y);
+            sb.draw(obstacle.getTopobs(), obstacle.getPostop().x , obstacle.getPostop().y);
+            sb.draw(obstacle.getBottomobs(), obstacle.getPosbottom().x, obstacle.getPosbottom().y);
         }
 
         for (Coin c : coins){
@@ -280,28 +281,6 @@ public class PlayState extends State {
                     cam.viewportHeight - 50);
         }
 
-//        //health screen
-//        int ione = (int) health % 10;
-//        int iten = (int) Math.floor((health / 10)%10);
-//
-//        if (iten >=0 && ione >= 0){
-//            health_one  = new Texture(number[ione]);
-//            health_ten = new Texture(number[iten]);
-//
-//            sb.draw(health_one ,
-//                    cam.position.x - cam.viewportWidth/2 + score_ten.getWidth() + 10,
-//                    cam.viewportHeight - 50);
-//            sb.draw(health_ten ,
-//                    cam.position.x - cam.viewportWidth/2 + 5 ,
-//                    cam.viewportHeight - 50);
-//        }else {
-//            sb.draw(new Texture("0.png"),
-//                    cam.position.x - cam.viewportWidth / 2 + score_ten.getWidth() + 10,
-//                    cam.viewportHeight - 50);
-//            sb.draw(new Texture("0.png"),
-//                    cam.position.x - cam.viewportWidth / 2 + 5,
-//                    cam.viewportHeight - 50);
-//        }
 
         // health Progress bar
         float ratio = (float) health/100;
@@ -332,11 +311,9 @@ public class PlayState extends State {
         gameover.dispose();
         score_one.dispose();
         score_ten.dispose();
-//        health_one.dispose();
-//        health_ten.dispose();
+        board.dispose();
         bar.dispose();
         bgh.dispose();
-        board.dispose();
         one.dispose();
         ten.dispose();
         rank.dispose();

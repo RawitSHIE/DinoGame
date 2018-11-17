@@ -3,7 +3,6 @@ package dino.game.oop.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.Random;
 
@@ -14,21 +13,30 @@ public class Obstacle {
     private static final int TUBE_GAB = 100;
     private static final int LOWEST_OPENING = 120;
 
-    private Rectangle boundsTop;
-    private Texture topTube;
-    private Vector2 postop;
+    private Rectangle boundsTop, boundsbottom;
+    private Texture topobs, bottomobs;
+    private Vector2 postop, posbottom;
     private Random rand;
 
     public Obstacle(float x){
-        topTube  = new Texture("toptube.png");
+        topobs = new Texture("toptube.png");
+        bottomobs = new Texture("bottomtube.png");
+
         rand = new Random();
 
-        postop = new Vector2(x ,rand.nextInt(FLUCTUATION) + LOWEST_OPENING);
-        boundsTop = new Rectangle(postop.x, postop.y, topTube.getWidth(), topTube.getHeight());
+        postop = new Vector2(x ,rand.nextInt(FLUCTUATION) + LOWEST_OPENING + TUBE_GAB);
+        posbottom = new Vector2(x ,postop.y - TUBE_GAB - bottomobs.getHeight());
+
+        boundsTop = new Rectangle(postop.x, postop.y, topobs.getWidth(), topobs.getHeight());
+        boundsbottom = new Rectangle(posbottom.x, posbottom.y, bottomobs.getWidth(), bottomobs.getHeight());
     }
 
-    public Texture getTopTube() {
-        return topTube;
+    public Texture getTopobs() {
+        return topobs;
+    }
+
+    public Texture getBottomobs(){
+        return bottomobs;
     }
 
 
@@ -36,19 +44,24 @@ public class Obstacle {
         return postop;
     }
 
+    public Vector2 getPosbottom() {
+        return posbottom;
+    }
 
     public void reposition(float x){
         postop.set(x, rand.nextInt(FLUCTUATION) + LOWEST_OPENING);
+        posbottom.set(x, postop.y - TUBE_GAB - bottomobs.getHeight());
         boundsTop.setPosition(postop.x, postop.y);
+        boundsbottom.setPosition(posbottom.x, posbottom.y);
 
     }
 
     public boolean collides(Rectangle player){
-        return player.overlaps(boundsTop);
+        return player.overlaps(boundsTop) || player.overlaps(boundsbottom);
 
     }
 
     public void dispose(){
-        topTube.dispose();
+        topobs.dispose();
     }
 }

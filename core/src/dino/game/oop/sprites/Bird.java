@@ -16,7 +16,7 @@ public class Bird {
 
     private boolean fall;
 
-    Texture texture = new Texture("birdanimation.png");
+    Texture texture = new Texture("white-dot.png");
 
     public Bird(int x, int y){
         position = new Vector3(x, y, 0);
