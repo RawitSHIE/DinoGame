@@ -13,17 +13,20 @@ public class HighScoreState extends State{
     private static final int NUM_WIDTH = 24;
     private static final int NUM_HEIGHT = 36;
 
+
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
-    private Texture background, rank, one, ten;
-    private BitmapFont ranktxt;
+    private Texture background, scoreboard, score, rank, one, ten;
 
 
     public HighScoreState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, DinoGame.WIDTH,DinoGame.HEIGHT);
         background = new Texture("bg.png");
-        ranktxt = new BitmapFont();
+        scoreboard = new Texture("board.png");
+        score = new Texture("score.png");
+        System.out.println(Score.getScore());
+
     }
 
     @Override
@@ -43,19 +46,25 @@ public class HighScoreState extends State{
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(background, cam.position.x - cam.viewportWidth/2,0, DinoGame.WIDTH, DinoGame.HEIGHT);
+        sb.draw(scoreboard,
+                cam.position.x - scoreboard.getWidth()/4 ,
+                cam.position.y - scoreboard.getHeight()/4,
+                scoreboard.getWidth()/2,
+                scoreboard.getHeight()/2);
+
+        sb.draw(score,
+                cam.position.x - score.getWidth()/4,
+                cam.position.y + 100,
+                score.getWidth()/2,
+                score.getHeight()/2);
         for (int i = 0; i < 3; i++){
             one  = new Texture(number[Score.getScore().get(i)%10]);
             ten = new Texture(number[Score.getScore().get(i)/10]);
             rank = new Texture(number[i+1]);
 
             // Draw Rank
-            ranktxt.setColor(Color.RED);
-            ranktxt.draw(sb,
-                    "RANK",
-                    cam.position.x  - (NUM_WIDTH*2)*5,
-                    cam.viewportHeight/2);
             sb.draw(rank ,
-                    cam.position.x + 100 - (NUM_WIDTH*2 + NUM_WIDTH*2) - 2,
+                    cam.position.x - (NUM_WIDTH*2 + NUM_WIDTH*2) - 2,
                     cam.viewportHeight/2 - NUM_HEIGHT*2*i + 10,
                     NUM_WIDTH*2,
                     NUM_HEIGHT*2);
@@ -76,7 +85,7 @@ public class HighScoreState extends State{
     @Override
     public void dispose() {
         background.dispose();
-        System.out.println("EndGame State Dispose");
+        System.out.println("HighScoreState Dispose");
     }
 
 }

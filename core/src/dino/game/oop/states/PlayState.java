@@ -176,6 +176,8 @@ public class PlayState extends State {
             sb.draw(c.getCoins(), c.getPoscoins().x, c.getPoscoins().y);
         }
 
+        sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
+
         //draw ground
         sb.draw(ground ,groundPos1.x, groundPos1.y);
         sb.draw(ground ,groundPos2.x, groundPos2.y);
@@ -293,9 +295,7 @@ public class PlayState extends State {
                 cam.position.y - cam.viewportHeight/4 ,
                 10,
                 cam.viewportHeight/2 * ratio );
-        sb.draw(potion.getPotions(),
-                potion.getPospotions().x,
-                potion.getPospotions().y);
+
         sb.end();
     }
 
