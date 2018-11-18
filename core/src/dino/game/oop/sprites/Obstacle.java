@@ -19,8 +19,8 @@ public class Obstacle {
     private Random rand;
 
     public Obstacle(float x){
-        topobs = new Texture("toptube.png");
-        bottomobs = new Texture("bottomtube.png");
+        topobs = new Texture("toprock.png");
+        bottomobs = new Texture("bottomrock.png");
 
         rand = new Random();
 

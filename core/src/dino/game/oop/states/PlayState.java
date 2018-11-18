@@ -1,15 +1,15 @@
 package dino.game.oop.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.scoring.Score;
 import dino.game.oop.sprites.*;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class PlayState extends State {
@@ -26,11 +26,12 @@ public class PlayState extends State {
     private Head head;
     private Vector2 groundPos1, groundPos2;
     private boolean collide;
-    private Texture bg, ground, gameover;
+    private Texture bg, ground;
     private Texture score_one, score_ten;
     private Texture bar, bgh;
-    private Texture board;
+    private Texture board, high;
     private Texture one, ten, rank;
+    private Texture playbtn, menubtn;
 
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
@@ -43,12 +44,9 @@ public class PlayState extends State {
     private boolean ishighscore = false;
     private boolean set = false;
 
-    private BitmapFont ranktxt;
-    private BitmapFont highscore;
-
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
+    ArrayList<Texture> badge = new ArrayList<Texture>();
 
-    private Texture playbtn, menubtn;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -58,18 +56,21 @@ public class PlayState extends State {
         ground = new Texture("new-ground.png");
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,20);
-        bgh = new Texture("white-dot.png");
-        board = new Texture("White-dot.png");
 
-        ranktxt = new BitmapFont();
-        highscore = new BitmapFont();
+        bgh = new Texture("white-dot.png");
+        board = new Texture("menu-b.png");
+        high = new Texture("menu-highscore.png");
+
+        badge.add(new Texture("1st.png"));
+        badge.add(new Texture("2nd.png"));
+        badge.add(new Texture("3rd.png"));
+
         playbtn  = new Texture("play.png");
         menubtn = new Texture("menu.png");
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
-        gameover = new Texture("gameover.png");
 
         //  Obs Collection
         obstacles = new Array<Obstacle>();
@@ -146,15 +147,11 @@ public class PlayState extends State {
             if (health <=  0){
                 collide = true;
             }
-
             cam.update();
-
         }else{
             bird.updateAnimation(dt);
             head.updateAnimation(dt);
         }
-
-
     }
 
     @Override
@@ -188,17 +185,19 @@ public class PlayState extends State {
                 ishighscore = Score.setScore(score);
                 set = true;
             }
-
-            // bg-ground
-            sb.draw(board,
-                    cam.position.x-100,
-                    cam.position.y-75,
-                    200,
-                    150);
-
-            sb.draw(gameover,
-                    cam.position.x - gameover.getWidth()/2,
-                    cam.viewportHeight/2 + 10);
+            if (ishighscore){
+                sb.draw(high,
+                        cam.position.x - board.getWidth()/8,
+                        cam.position.y - board.getHeight()/8,
+                        board.getWidth()/4,
+                        board.getHeight()/4);
+            }else{
+                sb.draw(board,
+                        cam.position.x - board.getWidth()/8,
+                        cam.position.y - board.getHeight()/8,
+                        board.getWidth()/4,
+                        board.getHeight()/4);
+            }
 
             for (Integer i = 0; i < 3; i++){
                 one  = new Texture(number[Score.getScore().get(i)%10]);
@@ -206,14 +205,6 @@ public class PlayState extends State {
                 rank = new Texture(number[i+1]);
 
                 // Draw Score
-                if (ishighscore){
-                    highscore.setColor(Color.RED);
-                    highscore.draw(sb,
-                        "Highscore!!",
-                        cam.position.x  - 70,
-                        cam.viewportHeight/2);
-                }
-
                 int indexone = score % 10;
                 int indexten = (int) Math.floor(score/10);
 
@@ -222,32 +213,31 @@ public class PlayState extends State {
 
                 sb.draw(score_one,
                         cam.position.x - 60 + NUM_WIDTH ,
-                        cam.viewportHeight/2 - gameover.getHeight() - 10);
-                if (indexten != 0){
-                    sb.draw(score_ten,
-                            cam.position.x - 60,
-                            cam.viewportHeight/2 - gameover.getHeight() - 10);
-                }
+                        cam.viewportHeight/2 - 25);
+                sb.draw(score_ten,
+                        cam.position.x - 60,
+                        cam.viewportHeight/2 - 25);
 
                 // Draw Rank
-                ranktxt.setColor(Color.RED);
-                ranktxt.draw(sb,
-                        "RANK",
-                        cam.position.x + 100 - (NUM_WIDTH/2)*5,
-                        cam.viewportHeight/2);
+                sb.draw(badge.get(i),
+                        cam.position.x + 10,
+                        cam.viewportHeight/2  - NUM_HEIGHT/2*i - 10,
+                        NUM_WIDTH/2,
+                        NUM_HEIGHT/2);
+
                 sb.draw(rank ,
-                        cam.position.x + 100 - (NUM_WIDTH*2 + NUM_WIDTH/2) - 2,
-                        cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i + 10,
+                        cam.position.x + 95 - (NUM_WIDTH*2 + NUM_WIDTH/2) - 2,
+                        cam.viewportHeight/2  - NUM_HEIGHT/2*i - 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
                 sb.draw(ten ,
-                        cam.position.x + 100 - (NUM_WIDTH + NUM_WIDTH/2) - 2,
-                        cam.viewportHeight/2 - gameover.getHeight() - NUM_HEIGHT/2*i + 10,
+                        cam.position.x + 95 - (NUM_WIDTH + NUM_WIDTH/2) - 2,
+                        cam.viewportHeight/2  - NUM_HEIGHT/2*i - 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
                 sb.draw(one ,
-                        cam.position.x + 100 - NUM_WIDTH - 2,
-                        cam.viewportHeight/2-gameover.getHeight() - NUM_HEIGHT/2*i + 10,
+                        cam.position.x + 95 - NUM_WIDTH - 2,
+                        cam.viewportHeight/2 - NUM_HEIGHT/2*i - 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
             }
@@ -255,20 +245,19 @@ public class PlayState extends State {
             // endgame btn
             sb.draw(playbtn,
                     cam.position.x - playbtn.getWidth()/2 - (menubtn.getWidth()/4 - 20) ,
-                    cam.position.y - playbtn.getHeight()/2 - 80,
+                    cam.position.y - board.getHeight()/8 - 30,
                     playbtn.getWidth()/2,
                     playbtn.getHeight()/2);
 
             sb.draw(menubtn,
                     cam.position.x +  menubtn.getWidth()/2 - (menubtn.getWidth()/4 + 20) ,
-                    cam.position.y - menubtn.getHeight()/2 - 80,
+                    cam.position.y - board.getHeight()/8 -30,
                     menubtn.getWidth()/2,
                     menubtn.getHeight()/2);
 
         }
 
         //score screen
-
         int indexone = score % 10;
         int indexten = (int) Math.floor(score/10);
 
@@ -305,7 +294,6 @@ public class PlayState extends State {
         bg.dispose();
         bird.dispose();
         ground.dispose();
-        gameover.dispose();
         score_one.dispose();
         score_ten.dispose();
         board.dispose();
@@ -317,6 +305,12 @@ public class PlayState extends State {
         potion.dispose();
         playbtn.dispose();
         menubtn.dispose();
+        board.dispose();
+        high.dispose();
+
+        for (Texture i : badge){
+            i.dispose();
+        }
 
         for (Obstacle obstacle : obstacles){
             obstacle.dispose();
