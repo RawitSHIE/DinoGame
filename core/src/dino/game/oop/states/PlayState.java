@@ -1,6 +1,7 @@
 package dino.game.oop.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -33,6 +34,10 @@ public class PlayState extends State {
     private Texture one, ten, rank;
     private Texture playbtn, menubtn;
 
+    private Texture home, play;
+
+    private Texture bloodframe, bloodbg;
+
     private Array<Coin> coins;
     private Array<Obstacle> obstacles;
     private Potion potion;
@@ -44,8 +49,9 @@ public class PlayState extends State {
     private boolean ishighscore = false;
     private boolean set = false;
 
+
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
-    ArrayList<Texture> badge = new ArrayList<Texture>();
+    private ArrayList<Texture> badge = new ArrayList<Texture>();
 
 
     public PlayState(GameStateManager gsm) {
@@ -68,6 +74,9 @@ public class PlayState extends State {
         playbtn  = new Texture("play.png");
         menubtn = new Texture("menu.png");
 
+        home = new Texture("homebtn.png");
+        play = new Texture("playbtn.png");
+
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
         groundPos2 = new Vector2((cam.position.x/10 - cam.viewportWidth/2) + ground.getWidth(), GROUND_Y_OFFSET);
@@ -84,6 +93,10 @@ public class PlayState extends State {
             coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
 
+//        blood
+        bloodbg = new Texture("bg-blood.png");
+        bloodframe = new Texture("blood-frame.png");
+
         // bar
         bar = new Texture("dot.png");
         potion = new Potion((POTION_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2);
@@ -99,6 +112,8 @@ public class PlayState extends State {
 
         }else if(Gdx.input.justTouched()) {
             gsm.set(new MenuState(gsm));
+        }else if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+
         }
     }
 
@@ -134,6 +149,7 @@ public class PlayState extends State {
             if (cam.position.x - (cam.viewportWidth/2) > potion.getPospotions().x + potion.getPotions().getWidth()){
                 potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
             }
+
             if (potion.collides(head.getBounds())){
                 potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
                 if (health + 10 >= 100){
@@ -142,6 +158,8 @@ public class PlayState extends State {
                     health += 20;
                 }
             }
+
+
 
             health = health - 0.1;
             if (health <=  0){
@@ -243,6 +261,21 @@ public class PlayState extends State {
             }
 
             // endgame btn
+
+//            if(Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+//                sb.draw(home, 5 - 2, 5 - 2, home.getWidth() + 4, home.getHeight() + 4);
+//            }else{
+//                sb.draw(home, 5, 5);
+//
+//            }
+//
+//            if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+//                sb.draw(play, DinoGame.WIDTH -125 - 2, 5-2 , play.getWidth() + 4 , play.getHeight() + 4);
+//            }else {
+//                sb.draw(play, DinoGame.WIDTH - 125, 5);
+//            }
+
+
             sb.draw(playbtn,
                     cam.position.x - playbtn.getWidth()/2 - (menubtn.getWidth()/4 - 20) ,
                     cam.position.y - board.getHeight()/8 - 30,
@@ -274,6 +307,7 @@ public class PlayState extends State {
 
         // health Progress bar
         float ratio = (float) health/100;
+
         sb.draw(bgh,
                 cam.position.x - cam.viewportWidth/2 + 19,
                 cam.position.y - cam.viewportHeight/4 ,
@@ -284,6 +318,11 @@ public class PlayState extends State {
                 cam.position.y - cam.viewportHeight/4 ,
                 10,
                 cam.viewportHeight/2 * ratio );
+        sb.draw(bloodframe,
+                cam.position.x - cam.viewportWidth/2 + 20 - 3,
+                cam.position.y - cam.viewportHeight/4 - 10,
+                bloodframe.getWidth()/4 ,
+                cam.viewportHeight/2 + 20);
 
         sb.end();
     }

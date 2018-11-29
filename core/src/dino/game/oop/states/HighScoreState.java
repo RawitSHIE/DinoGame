@@ -22,6 +22,7 @@ public class HighScoreState extends State{
     private Texture background, scoreboard, score, rank, one, ten;
     private Texture b1;
     private ArrayList<Texture> badge= new ArrayList<Texture>();
+    private Texture homeBtn, exitBtn;
 
 
     public HighScoreState(GameStateManager gsm) {
@@ -31,9 +32,14 @@ public class HighScoreState extends State{
         scoreboard = new Texture("board.png");
         score = new Texture("score.png");
 
+        homeBtn = new Texture("homebtn.png");
+        exitBtn = new Texture("exitbtn.png");
+
         badge.add(new Texture("1st.png"));
         badge.add(new Texture("2nd.png"));
         badge.add(new Texture("3rd.png"));
+
+
 
         b1 = new Texture("play.png");
 
@@ -42,8 +48,11 @@ public class HighScoreState extends State{
 
     @Override
     public void handleInput() {
-        if (Gdx.input.justTouched()){
-            gsm.set(new PlayState(gsm));
+        if (Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+            System.exit(0);
+        }
+        else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+            gsm.set(new MenuState(gsm));
         }
     }
 
@@ -98,9 +107,23 @@ public class HighScoreState extends State{
                     NUM_HEIGHT*2);
         }
 
-        sb.draw(b1,
-                cam.position.x - b1.getWidth()/2,
-                cam.position.y - b1.getHeight()/2 - scoreboard.getHeight()/4 - 25);
+        if(Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            sb.draw(homeBtn, 5 - 2, 5 - 2, homeBtn.getWidth() + 4, homeBtn.getHeight() + 4);
+        }else{
+            sb.draw(homeBtn, 5, 5);
+
+        }
+
+        if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            sb.draw(exitBtn, DinoGame.WIDTH -125 - 2, 5-2 , exitBtn.getWidth() + 4 , exitBtn.getHeight() + 4);
+        }else{
+            sb.draw(exitBtn, DinoGame.WIDTH -125, 5);
+
+        }
+
+//        sb.draw(b1,
+//                cam.position.x - b1.getWidth()/2,
+//                cam.position.y - b1.getHeight()/2 - scoreboard.getHeight()/4 - 25);
 
         sb.end();
     }
