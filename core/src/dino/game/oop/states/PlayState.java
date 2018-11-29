@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
-import dino.game.oop.scoring.Score;
+import dino.game.oop.extra.Score;
 import dino.game.oop.sprites.*;
 
 import java.util.ArrayList;
@@ -31,9 +31,7 @@ public class PlayState extends State {
     private Texture bar, bgh;
     private Texture board, high;
     private Texture one, ten, rank;
-    private Texture playbtn, menubtn;
-
-    private Texture home, play;
+    private Texture playb, menu;
 
     private Texture bloodframe, bloodbg;
 
@@ -70,11 +68,8 @@ public class PlayState extends State {
         badge.add(new Texture("2nd.png"));
         badge.add(new Texture("3rd.png"));
 
-        playbtn  = new Texture("play.png");
-        menubtn = new Texture("menu.png");
-
-        home = new Texture("homebtn.png");
-        play = new Texture("playbutton.png");
+        playb = new Texture("playbutton.png");
+        menu = new Texture("homebtn.png");
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -110,9 +105,9 @@ public class PlayState extends State {
 //            System.out.println("Touch");
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
-            gsm.set(new PlayState(gsm));
-        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
             gsm.set(new MenuState(gsm));
+        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            gsm.set(new PlayState(gsm));
         }
     }
 
@@ -158,8 +153,6 @@ public class PlayState extends State {
                 }
             }
 
-
-
             health = health - 0.1;
             if (health <=  0){
                 collide = true;
@@ -168,6 +161,7 @@ public class PlayState extends State {
         }else{
             bird.updateAnimation(dt);
             head.updateAnimation(dt);
+
         }
     }
 
@@ -257,6 +251,7 @@ public class PlayState extends State {
                         cam.viewportHeight/2 - NUM_HEIGHT/2*i - 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
+
             }
 
             // endgame btn
@@ -265,29 +260,17 @@ public class PlayState extends State {
 //            float adj_height = cam.viewportHeight -  cam.viewportHeight/2;
 
             if(Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
-                sb.draw(home, adj_width + 5 - 2, 5 - 2, home.getWidth()/2 + 4, home.getHeight()/2 + 4);
+                sb.draw(playb, adj_width + 5 - 2, 5 - 2, playb.getWidth()/2 + 4, playb.getHeight()/2 + 4);
             }else{
-                sb.draw(home, adj_width + 5, 5,home.getWidth()/2, home.getHeight()/2);
+                sb.draw(playb, adj_width + 5, 5, playb.getWidth()/2, playb.getHeight()/2);
             }
 
             if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
-                sb.draw(play, adj_width + cam.viewportWidth - play.getWidth()/2 - 2, 5 - 2 , play.getWidth()/2 + 4 , play.getHeight()/2 + 4);
+                sb.draw(menu, adj_width + cam.viewportWidth - menu.getWidth()/2 - 2, 5 - 2 , menu.getWidth()/2 + 4 , menu.getHeight()/2 + 4);
             }else {
-                sb.draw(play, adj_width + cam.viewportWidth - play.getWidth()/2, 5,play.getWidth()/2 , play.getHeight()/2);
+                sb.draw(menu, adj_width + cam.viewportWidth - menu.getWidth()/2, 5,menu.getWidth()/2 , menu.getHeight()/2);
             }
 
-
-//            sb.draw(playbtn,
-//                    cam.position.x - playbtn.getWidth()/2 - (menubtn.getWidth()/4 - 20) ,
-//                    cam.position.y - board.getHeight()/8 - 30,
-//                    playbtn.getWidth()/2,
-//                    playbtn.getHeight()/2);
-//
-//            sb.draw(menubtn,
-//                    cam.position.x +  menubtn.getWidth()/2 - (menubtn.getWidth()/4 + 20) ,
-//                    cam.position.y - board.getHeight()/8 -30,
-//                    menubtn.getWidth()/2,
-//                    menubtn.getHeight()/2);
 
         }
 
@@ -343,13 +326,15 @@ public class PlayState extends State {
         ten.dispose();
         rank.dispose();
         potion.dispose();
-        playbtn.dispose();
-        menubtn.dispose();
+
         board.dispose();
         high.dispose();
 
-        play.dispose();
-        home.dispose();
+        bloodframe.dispose();
+        bloodbg.dispose();
+
+        menu.dispose();
+        playb.dispose();
 
         for (Texture i : badge){
             i.dispose();

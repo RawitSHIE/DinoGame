@@ -1,15 +1,10 @@
 package dino.game.oop.states;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import dino.game.oop.DinoGame;
-import dino.game.oop.scoring.Score;
-import dino.game.oop.sprites.Bird;
+import dino.game.oop.extra.Score;
 
-import javax.xml.soap.Text;
 import java.util.ArrayList;
 
 public class HighScoreState extends State{
@@ -20,7 +15,6 @@ public class HighScoreState extends State{
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
     private Texture background, scoreboard, score, rank, one, ten;
-    private Texture b1;
     private ArrayList<Texture> badge= new ArrayList<Texture>();
     private Texture homeBtn, exitBtn;
 
@@ -38,10 +32,6 @@ public class HighScoreState extends State{
         badge.add(new Texture("1st.png"));
         badge.add(new Texture("2nd.png"));
         badge.add(new Texture("3rd.png"));
-
-
-
-        b1 = new Texture("play.png");
 
         System.out.println(Score.getScore());
     }
@@ -119,19 +109,17 @@ public class HighScoreState extends State{
             sb.draw(exitBtn, DinoGame.WIDTH -125, 5);
         }
 
-//        sb.draw(b1,
-//                cam.position.x - b1.getWidth()/2,
-//                cam.position.y - b1.getHeight()/2 - scoreboard.getHeight()/4 - 25);
-
         sb.end();
     }
 
     @Override
     public void dispose() {
         background.dispose();
+
         for (Texture i : badge){
             i.dispose();
         }
+
         rank.dispose();
         ten.dispose();
         one.dispose();

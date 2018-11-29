@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import dino.game.oop.DinoGame;
 
 public class Head {
     private static final int GRAVITY = -15;
@@ -17,6 +18,8 @@ public class Head {
     private Animation birdAnimation;
     Texture texture = new Texture("birdanimation.png");
 
+    private int framecount  = 0;
+
 
 
     public Head(int x, int y){
@@ -27,16 +30,20 @@ public class Head {
     }
 //Gdx.input.isButtonPressed(Input.Buttons.LEFT)
     public void update(float dt, float x){
+        framecount ++;
+//        System.out.println(framecount);
         birdAnimation.update(dt);
 //        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && framecount > 15){
             position.x = Gdx.input.getX() + x - 650;
             position.y = 460 - Gdx.input.getY();
 //            velocity.y = 400;
 //            System.out.println("Space Pressed");
             velocity.add(dt/2, 0,0);
-        }else{
-//            velocity.y -= 50;
+        }else if  (framecount <= 15){
+////            velocity.y -= 50;
+//            position.x = 20;
+//            position.y = DinoGame.HEIGHT/4;
 
         }
 

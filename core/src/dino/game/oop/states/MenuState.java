@@ -11,7 +11,6 @@ public class MenuState extends State {
     private Texture playBtn;
     private Texture leaderBtn;
     private Texture exitBtn;
-    private Texture homeBtn;
     private boolean leaderboard = false;
 
     public MenuState(GameStateManager gsm) {
@@ -21,7 +20,6 @@ public class MenuState extends State {
         playBtn = new Texture("playbtn.png");
         leaderBtn = new Texture("leaderbutton.png");
         exitBtn = new Texture("exitbutton.png");
-        homeBtn = new Texture("homebtn.png");
 
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
         cam.position.set(0,cam.position.y,0);
@@ -60,9 +58,7 @@ public class MenuState extends State {
 
         if(!leaderboard) {
         }
-//        if(leaderboard){
-//            sb.draw(homeBtn, 5, 5);
-//        }
+
 
         if (Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
             sb.draw(leaderBtn, 5 - 2, 5 - 2, leaderBtn.getWidth() + 4 ,  leaderBtn.getHeight() + 4);
@@ -83,7 +79,6 @@ public class MenuState extends State {
         background.dispose();
         playBtn.dispose();
         leaderBtn.dispose();
-        homeBtn.dispose();
         exitBtn.dispose();
         System.out.println("MenuState Dispose");
     }

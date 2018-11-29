@@ -1,4 +1,4 @@
-package dino.game.oop.scoring;
+package dino.game.oop.extra;
 
 import java.io.*;
 import java.util.ArrayList;
