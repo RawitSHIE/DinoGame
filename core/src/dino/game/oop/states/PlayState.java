@@ -1,7 +1,6 @@
 package dino.game.oop.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -75,7 +74,7 @@ public class PlayState extends State {
         menubtn = new Texture("menu.png");
 
         home = new Texture("homebtn.png");
-        play = new Texture("playbtn.png");
+        play = new Texture("playbutton.png");
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -110,10 +109,10 @@ public class PlayState extends State {
         if(Gdx.input.justTouched() && !collide) {
 //            System.out.println("Touch");
 
-        }else if(Gdx.input.justTouched()) {
+        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            gsm.set(new PlayState(gsm));
+        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
             gsm.set(new MenuState(gsm));
-        }else if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-
         }
     }
 
@@ -262,31 +261,33 @@ public class PlayState extends State {
 
             // endgame btn
 
-//            if(Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
-//                sb.draw(home, 5 - 2, 5 - 2, home.getWidth() + 4, home.getHeight() + 4);
-//            }else{
-//                sb.draw(home, 5, 5);
+            float adj_width = cam.position.x - cam.viewportWidth/2 ;
+//            float adj_height = cam.viewportHeight -  cam.viewportHeight/2;
+
+            if(Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+                sb.draw(home, adj_width + 5 - 2, 5 - 2, home.getWidth()/2 + 4, home.getHeight()/2 + 4);
+            }else{
+                sb.draw(home, adj_width + 5, 5,home.getWidth()/2, home.getHeight()/2);
+            }
+
+            if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+                sb.draw(play, adj_width + cam.viewportWidth - play.getWidth()/2 - 2, 5 - 2 , play.getWidth()/2 + 4 , play.getHeight()/2 + 4);
+            }else {
+                sb.draw(play, adj_width + cam.viewportWidth - play.getWidth()/2, 5,play.getWidth()/2 , play.getHeight()/2);
+            }
+
+
+//            sb.draw(playbtn,
+//                    cam.position.x - playbtn.getWidth()/2 - (menubtn.getWidth()/4 - 20) ,
+//                    cam.position.y - board.getHeight()/8 - 30,
+//                    playbtn.getWidth()/2,
+//                    playbtn.getHeight()/2);
 //
-//            }
-//
-//            if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
-//                sb.draw(play, DinoGame.WIDTH -125 - 2, 5-2 , play.getWidth() + 4 , play.getHeight() + 4);
-//            }else {
-//                sb.draw(play, DinoGame.WIDTH - 125, 5);
-//            }
-
-
-            sb.draw(playbtn,
-                    cam.position.x - playbtn.getWidth()/2 - (menubtn.getWidth()/4 - 20) ,
-                    cam.position.y - board.getHeight()/8 - 30,
-                    playbtn.getWidth()/2,
-                    playbtn.getHeight()/2);
-
-            sb.draw(menubtn,
-                    cam.position.x +  menubtn.getWidth()/2 - (menubtn.getWidth()/4 + 20) ,
-                    cam.position.y - board.getHeight()/8 -30,
-                    menubtn.getWidth()/2,
-                    menubtn.getHeight()/2);
+//            sb.draw(menubtn,
+//                    cam.position.x +  menubtn.getWidth()/2 - (menubtn.getWidth()/4 + 20) ,
+//                    cam.position.y - board.getHeight()/8 -30,
+//                    menubtn.getWidth()/2,
+//                    menubtn.getHeight()/2);
 
         }
 
@@ -346,6 +347,9 @@ public class PlayState extends State {
         menubtn.dispose();
         board.dispose();
         high.dispose();
+
+        play.dispose();
+        home.dispose();
 
         for (Texture i : badge){
             i.dispose();

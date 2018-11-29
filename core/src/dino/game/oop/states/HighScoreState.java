@@ -33,7 +33,7 @@ public class HighScoreState extends State{
         score = new Texture("score.png");
 
         homeBtn = new Texture("homebtn.png");
-        exitBtn = new Texture("exitbtn.png");
+        exitBtn = new Texture("exitbutton.png");
 
         badge.add(new Texture("1st.png"));
         badge.add(new Texture("2nd.png"));
@@ -111,14 +111,12 @@ public class HighScoreState extends State{
             sb.draw(homeBtn, 5 - 2, 5 - 2, homeBtn.getWidth() + 4, homeBtn.getHeight() + 4);
         }else{
             sb.draw(homeBtn, 5, 5);
-
         }
 
         if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
             sb.draw(exitBtn, DinoGame.WIDTH -125 - 2, 5-2 , exitBtn.getWidth() + 4 , exitBtn.getHeight() + 4);
         }else{
             sb.draw(exitBtn, DinoGame.WIDTH -125, 5);
-
         }
 
 //        sb.draw(b1,
@@ -137,6 +135,9 @@ public class HighScoreState extends State{
         rank.dispose();
         ten.dispose();
         one.dispose();
+        homeBtn.dispose();
+        exitBtn.dispose();
+
         System.out.println("HighScoreState Dispose");
     }
 

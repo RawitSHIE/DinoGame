@@ -19,8 +19,8 @@ public class MenuState extends State {
         cam.setToOrtho(false, DinoGame.WIDTH,DinoGame.HEIGHT);
         background = new Texture("bg.png");
         playBtn = new Texture("playbtn.png");
-        leaderBtn = new Texture("leaderbtn.png");
-        exitBtn = new Texture("exitbtn.png");
+        leaderBtn = new Texture("leaderbutton.png");
+        exitBtn = new Texture("exitbutton.png");
         homeBtn = new Texture("homebtn.png");
 
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
@@ -59,12 +59,22 @@ public class MenuState extends State {
         }
 
         if(!leaderboard) {
-            sb.draw(leaderBtn, 5, 5);
         }
 //        if(leaderboard){
 //            sb.draw(homeBtn, 5, 5);
 //        }
-        sb.draw(exitBtn, DinoGame.WIDTH -125, 5);
+
+        if (Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+            sb.draw(leaderBtn, 5 - 2, 5 - 2, leaderBtn.getWidth() + 4 ,  leaderBtn.getHeight() + 4);
+        }else{
+            sb.draw(leaderBtn, 5, 5);
+        }
+
+        if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            sb.draw(exitBtn, DinoGame.WIDTH -125 - 2, 5 - 2 , exitBtn.getWidth() + 4, exitBtn.getHeight() + 4);
+        }else{
+            sb.draw(exitBtn, DinoGame.WIDTH -125, 5);
+        }
         sb.end();
     }
 
