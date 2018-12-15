@@ -3,6 +3,7 @@ package dino.game.oop.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
@@ -26,7 +27,7 @@ public class PlayState extends State {
     private Head head;
     private Vector2 groundPos1, groundPos2;
     private boolean collide;
-    private Texture bg, ground;
+    private Texture bg, ground, blank;
     private Texture score_one, score_ten;
     private Texture bar, bgh;
     private Texture board, high;
@@ -60,7 +61,7 @@ public class PlayState extends State {
         rand = new Random();
         ground = new Texture("new-ground.png");
         bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
-        head = new Head(20,20);
+        head = new Head(20,150);
 
         bgh = new Texture("white-dot.png");
         board = new Texture("menu-b.png");
@@ -72,6 +73,7 @@ public class PlayState extends State {
 
         playb = new Texture("playbutton.png");
         menu = new Texture("homebtn.png");
+        blank = new Texture("FlyingBird.png");
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -89,7 +91,7 @@ public class PlayState extends State {
             coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
 
-//        blood
+//      blood
         bloodbg = new Texture("bg-blood.png");
         bloodframe = new Texture("blood-frame.png");
 
@@ -100,7 +102,7 @@ public class PlayState extends State {
         collide = false;
         score = 0;
 
-        c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/"))
+//        c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/"))
     }
 
     @Override
@@ -108,9 +110,9 @@ public class PlayState extends State {
         if(Gdx.input.justTouched() && !collide) {
 //            System.out.println("Touch");
 
-        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 662 && Gdx.input.getX() <= 796 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
             gsm.set(new MenuState(gsm));
-        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 485 && Gdx.input.getX() <= 617 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
             gsm.set(new PlayState(gsm));
         }
     }
@@ -123,12 +125,11 @@ public class PlayState extends State {
             bird.update(dt);
             cam.position.x = bird.getPosition().x + 80;
             head.update(dt, cam.position.x);
-
             for (Obstacle obstacle : obstacles){
                 if (cam.position.x - (cam.viewportWidth/2) > obstacle.getPostop().x + obstacle.getTopobs().getWidth()){
                     obstacle.reposition(obstacle.getPostop().x + ((Obstacle.OBS_WIDTH + OBS_SPACING) * 4));
                 }
-                if(obstacle.collides(head.getBounds())){
+                if(obstacle.collides(head.getBounds())) {
                     collide = true;
                     System.out.println(score);
                 }
@@ -167,6 +168,7 @@ public class PlayState extends State {
             head.updateAnimation(dt);
 
         }
+
     }
 
     @Override
@@ -196,6 +198,7 @@ public class PlayState extends State {
 
         //game over
         if (collide){
+            //debug
             if (!set){
                 ishighscore = Score.setScore(score);
                 set = true;
@@ -209,7 +212,7 @@ public class PlayState extends State {
             }else{
                 sb.draw(board,
                         cam.position.x - board.getWidth()/8,
-                        cam.position.y - board.getHeight()/8,
+                        cam.position.y - board.getHeight()/10,
                         board.getWidth()/4,
                         board.getHeight()/4);
             }
@@ -228,34 +231,33 @@ public class PlayState extends State {
 
                 sb.draw(score_one,
                         cam.position.x - 60 + NUM_WIDTH ,
-                        cam.viewportHeight/2 - 25);
+                        cam.viewportHeight/2 - 10);
                 sb.draw(score_ten,
                         cam.position.x - 60,
-                        cam.viewportHeight/2 - 25);
+                        cam.viewportHeight/2 - 10);
 
                 // Draw Rank
                 sb.draw(badge.get(i),
                         cam.position.x + 10,
-                        cam.viewportHeight/2  - NUM_HEIGHT/2*i - 10,
+                        cam.viewportHeight/2  - NUM_HEIGHT/2*i + 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
 
                 sb.draw(rank ,
                         cam.position.x + 95 - (NUM_WIDTH*2 + NUM_WIDTH/2) - 2,
-                        cam.viewportHeight/2  - NUM_HEIGHT/2*i - 10,
+                        cam.viewportHeight/2  - NUM_HEIGHT/2*i + 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
                 sb.draw(ten ,
                         cam.position.x + 95 - (NUM_WIDTH + NUM_WIDTH/2) - 2,
-                        cam.viewportHeight/2  - NUM_HEIGHT/2*i - 10,
+                        cam.viewportHeight/2  - NUM_HEIGHT/2*i + 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
                 sb.draw(one ,
                         cam.position.x + 95 - NUM_WIDTH - 2,
-                        cam.viewportHeight/2 - NUM_HEIGHT/2*i - 10,
+                        cam.viewportHeight/2 - NUM_HEIGHT/2*i + 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
-
             }
 
             // endgame btn
@@ -263,16 +265,22 @@ public class PlayState extends State {
             float adj_width = cam.position.x - cam.viewportWidth/2 ;
 //            float adj_height = cam.viewportHeight -  cam.viewportHeight/2;
 
-            if(Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
-                sb.draw(playb, adj_width + 5 - 2, 5 - 2, playb.getWidth()/2 + 4, playb.getHeight()/2 + 4);
+            if(Gdx.input.getX() >= 485 && Gdx.input.getX() <= 617 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
+                sb.draw(playb, adj_width + 240 -2, 10 - 2, 70 + 4, 70 + 4);
             }else{
-                sb.draw(playb, adj_width + 5, 5, playb.getWidth()/2, playb.getHeight()/2);
+                sb.draw(playb, adj_width + 240, 10, 70, 70);
             }
 
-            if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
-                sb.draw(menu, adj_width + cam.viewportWidth - menu.getWidth()/2 - 2, 5 - 2 , menu.getWidth()/2 + 4 , menu.getHeight()/2 + 4);
+            if(Gdx.input.getX() >= 662 && Gdx.input.getX() <= 796 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
+                sb.draw(menu, adj_width + cam.viewportWidth - menu.getWidth()/2 - 250 - 2, 10 - 2 , 70 + 4 , 70 + 4);
             }else {
-                sb.draw(menu, adj_width + cam.viewportWidth - menu.getWidth()/2, 5,menu.getWidth()/2 , menu.getHeight()/2);
+                sb.draw(menu, adj_width + cam.viewportWidth - menu.getWidth()/2 - 250, 10,70 , 70);
+            }
+
+            if(Gdx.input.justTouched()){
+                System.out.println("X="+Gdx.input.getX());
+                System.out.println("Y="+Gdx.input.getY());
+                System.out.println("---------------------");
             }
 
 
@@ -339,6 +347,7 @@ public class PlayState extends State {
 
         menu.dispose();
         playb.dispose();
+        blank.dispose();
 
         for (Texture i : badge){
             i.dispose();
