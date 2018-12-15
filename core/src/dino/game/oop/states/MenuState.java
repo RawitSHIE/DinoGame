@@ -23,7 +23,6 @@ public class MenuState extends State {
 
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
         cam.position.set(0,cam.position.y,0);
-
     }
 
     @Override
