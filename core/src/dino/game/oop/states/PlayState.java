@@ -47,6 +47,8 @@ public class PlayState extends State {
     private boolean set = false;
 
 
+    private Music c_sound;
+
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
     private ArrayList<Texture> badge = new ArrayList<Texture>();
 
@@ -97,6 +99,8 @@ public class PlayState extends State {
         System.out.println(Score.getScore());
         collide = false;
         score = 0;
+
+        c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/"))
     }
 
     @Override
