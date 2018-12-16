@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dino.game.oop.DinoGame;
 import dino.game.oop.extra.Score;
+import dino.game.oop.music.MainSong;
 
 import java.util.ArrayList;
 
@@ -18,8 +19,10 @@ public class HighScoreState extends State{
     private ArrayList<Texture> badge= new ArrayList<Texture>();
     private Texture homeBtn, exitBtn;
 
+    private MainSong mainSong;
 
-    public HighScoreState(GameStateManager gsm) {
+
+    public HighScoreState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
         cam.setToOrtho(false, DinoGame.WIDTH,DinoGame.HEIGHT);
         background = new Texture("bg.png");
@@ -34,6 +37,7 @@ public class HighScoreState extends State{
         badge.add(new Texture("3rd.png"));
 
         System.out.println(Score.getScore());
+        this.mainSong = mainSong;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class HighScoreState extends State{
             System.exit(0);
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
-            gsm.set(new MenuState(gsm));
+            gsm.set(new MenuState(gsm, mainSong));
         }
     }
 

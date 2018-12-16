@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import dino.game.oop.music.MainSong;
 import dino.game.oop.states.GameStateManager;
 import dino.game.oop.states.MenuState;
 
@@ -16,20 +17,18 @@ public class DinoGame extends ApplicationAdapter {
 	public static final String Title = "DinoRun";
 	private GameStateManager gsm;
 	private SpriteBatch batch;
-	private Music  music;
+	public MainSong mainSong;
 
-//	Texture img;
-	
 	@Override
 	public void create () {
+
+		mainSong = new MainSong();
+
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		gsm.push(new MenuState(gsm));
-		music = Gdx.audio.newMusic(Gdx.files.internal("Sound/Main.mp3"));
-		music.setLooping(true);
-		music.setVolume(0.1f);
-		music.play();
+		mainSong.play();
+		gsm.push(new MenuState(gsm, mainSong));
 	}
 
 	@Override
@@ -40,12 +39,10 @@ public class DinoGame extends ApplicationAdapter {
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);
 
-
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		music.dispose();
 	}
 }

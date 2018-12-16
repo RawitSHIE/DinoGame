@@ -1,6 +1,8 @@
 package dino.game.oop.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
 import dino.game.oop.extra.Score;
+import dino.game.oop.music.MainSong;
 import dino.game.oop.sprites.*;
 
 import java.util.ArrayList;
@@ -53,9 +56,17 @@ public class PlayState extends State {
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
     private ArrayList<Texture> badge = new ArrayList<Texture>();
 
+    private Music haweii;
+    private Sound c_sound, heart;
 
-    public PlayState(GameStateManager gsm) {
+    private MainSong mainSong;
+
+
+
+    public PlayState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
+        this.mainSong = mainSong;
+        mainSong.pause();
         cam.setToOrtho(false, DinoGame.WIDTH/2 , DinoGame.HEIGHT/2);
         bg = new Texture("bg-play.png");
         rand = new Random();
@@ -101,8 +112,12 @@ public class PlayState extends State {
         System.out.println(Score.getScore());
         collide = false;
         score = 0;
-
-//        c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/"))
+        haweii = Gdx.audio.newMusic(Gdx.files.internal("Sound/main.mp3"));
+        haweii.setLooping(true);
+        haweii.setVolume(0.2f);
+        haweii.play();
+        c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/coin.wav"));
+        heart = Gdx.audio.newSound(Gdx.files.internal("Sound/heart.wav"));
     }
 
     @Override
@@ -111,9 +126,11 @@ public class PlayState extends State {
 //            System.out.println("Touch");
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 662 && Gdx.input.getX() <= 796 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
-            gsm.set(new MenuState(gsm));
+            mainSong.play();
+            gsm.set(new MenuState(gsm, mainSong));
+
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 485 && Gdx.input.getX() <= 617 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
-            gsm.set(new PlayState(gsm));
+            gsm.set(new PlayState(gsm, mainSong));
         }
     }
 
@@ -133,6 +150,8 @@ public class PlayState extends State {
                     collide = true;
                     System.out.println(score);
                 }
+//                c_sound.play();
+
             }
 
             for (Coin c : coins){
@@ -141,7 +160,9 @@ public class PlayState extends State {
                 }
                 if (c.collides(head.getBounds())){
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
+                    c_sound.play(0.9f);
                     score ++;
+
                 }
             }
 
@@ -151,6 +172,7 @@ public class PlayState extends State {
 
             if (potion.collides(head.getBounds())){
                 potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
+                heart.play();
                 if (health + 10 >= 100){
                     health = 99;
                 }else{
@@ -348,6 +370,8 @@ public class PlayState extends State {
         menu.dispose();
         playb.dispose();
         blank.dispose();
+
+        haweii.dispose();
 
         for (Texture i : badge){
             i.dispose();
