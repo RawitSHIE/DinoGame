@@ -55,7 +55,7 @@ public class MenuState extends State {
         sb.begin();
         sb.draw(background, 0,0, DinoGame.WIDTH, DinoGame.HEIGHT);
 
-        sb.draw(gameLogo, DinoGame.WIDTH / 2 - gameLogo.getWidth() / 2, DinoGame.HEIGHT / 2 + 110);
+        sb.draw(gameLogo, DinoGame.WIDTH / 2 - gameLogo.getWidth() / 2, DinoGame.HEIGHT / 2 + 100);
 
         if ( Gdx.input.getX() >= 545 && Gdx.input.getX() <= 734 && Gdx.input.getY() >= 312 && Gdx.input.getY() <= 502 && !leaderboard){
             sb.draw(playBtn, DinoGame.WIDTH / 2 - playBtn.getWidth() / 2 - 2, DinoGame.HEIGHT / 2 - 100 - 2 - 50, playBtn.getWidth()+4 , playBtn.getHeight()+4);
