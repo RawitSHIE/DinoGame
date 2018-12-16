@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dino.game.oop.music.MainSong;
 import dino.game.oop.states.GameStateManager;
+import dino.game.oop.states.IntroState;
 import dino.game.oop.states.MenuState;
 
 public class DinoGame extends ApplicationAdapter {
@@ -21,14 +22,13 @@ public class DinoGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-
 		mainSong = new MainSong();
 
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		mainSong.play();
-		gsm.push(new MenuState(gsm, mainSong));
+		gsm.push(new IntroState(gsm, mainSong));
 	}
 
 	@Override
