@@ -1,6 +1,7 @@
 package dino.game.oop.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -14,6 +15,7 @@ public class MenuState extends State {
     private Texture exitBtn;
     private boolean leaderboard = false;
     private MainSong mainSong;
+    private Sound c_btn;
 
     public MenuState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
@@ -28,18 +30,22 @@ public class MenuState extends State {
         cam.position.set(0,cam.position.y,0);
 
         this.mainSong = mainSong;
+        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
 
     }
 
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched() && Gdx.input.getX() >= 545 && Gdx.input.getX() <= 734 && Gdx.input.getY() >= 264 && Gdx.input.getY() <= 452 && !leaderboard){
+            c_btn.play();
             gsm.set(new PlayState(gsm, mainSong));
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711 && !leaderboard){
+            c_btn.play();
             gsm.set(new HighScoreState(gsm, mainSong));
         }
         if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+            c_btn.play();
             System.exit(0);
         }
     }
@@ -85,6 +91,7 @@ public class MenuState extends State {
         playBtn.dispose();
         leaderBtn.dispose();
         exitBtn.dispose();
+        c_btn.dispose();
         System.out.println("MenuState Dispose");
     }
 }

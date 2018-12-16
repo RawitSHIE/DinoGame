@@ -1,5 +1,6 @@
 package dino.game.oop.states;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dino.game.oop.DinoGame;
@@ -20,6 +21,7 @@ public class HighScoreState extends State{
     private Texture homeBtn, exitBtn;
 
     private MainSong mainSong;
+    private Sound c_btn;
 
 
     public HighScoreState(GameStateManager gsm, MainSong mainSong) {
@@ -38,6 +40,8 @@ public class HighScoreState extends State{
 
         System.out.println(Score.getScore());
         this.mainSong = mainSong;
+
+        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
     }
 
     @Override
@@ -46,6 +50,7 @@ public class HighScoreState extends State{
             System.exit(0);
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+            c_btn.play();
             gsm.set(new MenuState(gsm, mainSong));
         }
     }

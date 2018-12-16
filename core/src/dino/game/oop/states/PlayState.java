@@ -12,6 +12,7 @@ import dino.game.oop.extra.Score;
 import dino.game.oop.music.MainSong;
 import dino.game.oop.sprites.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -54,10 +55,12 @@ public class PlayState extends State {
     private ArrayList<Texture> badge = new ArrayList<Texture>();
 
     private Music haweii;
-    private Sound c_sound, heart;
+    private Sound c_sound, heart, c_btn, c_hit;
 
     private MainSong mainSong;
+    private int time = 300;
 
+    private float init;
 
 
     public PlayState(GameStateManager gsm, MainSong mainSong) {
@@ -109,17 +112,17 @@ public class PlayState extends State {
         collide = false;
         score = 0;
 
-        haweii = Gdx.audio.newMusic(Gdx.files.internal("Sound/main.mp3"));
+        haweii = Gdx.audio.newMusic(Gdx.files.internal("Sound/Main_1.mp3"));
         haweii.setLooping(true);
         haweii.setVolume(0.2f);
         haweii.play();
 
-
-
         c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/coin.wav"));
         heart = Gdx.audio.newSound(Gdx.files.internal("Sound/heart.wav"));
+        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
+        c_hit = Gdx.audio.newSound(Gdx.files.internal("Sound/hit.mp3"));
 
-//        c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/hit.WAV"));
+
 
 
     }
@@ -127,73 +130,83 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
         if(Gdx.input.justTouched() && !collide) {
-//            System.out.println("Touch");
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            c_btn.play();
             mainSong.play();
             gsm.set(new MenuState(gsm, mainSong));
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            c_btn.play();
             gsm.set(new PlayState(gsm, mainSong));
         }
     }
 
     @Override
     public void update(float dt) {
-        handleInput();
-        updateGround();
-        if (!collide){
-            bird.update(dt);
-            cam.position.x = bird.getPosition().x + 80;
-            head.update(dt, cam.position.x);
+        time -= 1;
 
-            for (Obstacle obstacle : obstacles){
-                if (cam.position.x - (cam.viewportWidth/2) > obstacle.getPostop().x + obstacle.getTopobs().getWidth()){
+        handleInput();
+        if (!collide) {
+            if (time < 0){
+                bird.update(dt);
+                updateGround();
+                head.update(dt, cam.position.x);
+
+                System.out.println(time);
+            }else{
+            }
+            cam.position.x = bird.getPosition().x + 80;
+
+
+
+
+            for (Obstacle obstacle : obstacles) {
+                if (cam.position.x - (cam.viewportWidth / 2) > obstacle.getPostop().x + obstacle.getTopobs().getWidth()) {
                     obstacle.reposition(obstacle.getPostop().x + ((Obstacle.OBS_WIDTH + OBS_SPACING) * 4));
                 }
-                if(obstacle.collides(head.getBounds())){
+                if (obstacle.collides(head.getBounds())) {
+                    c_hit.play();
                     collide = true;
                     System.out.println(score);
                 }
-//                c_sound.play();
-
             }
 
-            for (Coin c : coins){
-                if (cam.position.x - (cam.viewportWidth/2) > c.getPoscoins().x + c.getCoins().getWidth()){
+            for (Coin c : coins) {
+                if (cam.position.x - (cam.viewportWidth / 2) > c.getPoscoins().x + c.getCoins().getWidth()) {
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
                 }
-                if (c.collides(head.getBounds())){
+                if (c.collides(head.getBounds())) {
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
                     c_sound.play(0.9f);
-                    score ++;
+                    score++;
 
                 }
             }
 
-            if (cam.position.x - (cam.viewportWidth/2) > potion.getPospotions().x + potion.getPotions().getWidth()){
+            if (cam.position.x - (cam.viewportWidth / 2) > potion.getPospotions().x + potion.getPotions().getWidth()) {
                 potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
             }
 
-            if (potion.collides(head.getBounds())){
+            if (potion.collides(head.getBounds())) {
                 potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
                 heart.play();
-                if (health + 10 >= 100){
+                if (health + 10 >= 100) {
                     health = 99;
-                }else{
+                } else {
                     health += 20;
                 }
             }
 
-            health = health - 0.1;
-            if (health <=  0){
+            if (time < 0)
+                health = health - 0.1;
+            if (health <= 0) {
                 collide = true;
             }
             cam.update();
-        }else{
+        } else {
             bird.updateAnimation(dt);
             head.updateAnimation(dt);
-
         }
     }
 
@@ -217,6 +230,15 @@ public class PlayState extends State {
         }
 
         sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
+
+        //countdown
+        int tt = Math.max(time/60 , 0);
+
+        sb.draw(new Texture(number[tt%10]), cam.viewportWidth/8, cam.viewportHeight/2);
+        if (time < 200)
+            sb.draw(new Texture("tur1.png"), cam.viewportWidth/8 - 230 ,cam.viewportHeight/2 + 50 );
+        if (time < 100)
+            sb.draw(new Texture("tur2.png"), cam.viewportWidth/8 - 230 ,cam.viewportHeight/2 - 70 );
 
         //draw ground
         sb.draw(ground ,groundPos1.x, groundPos1.y);
@@ -289,7 +311,6 @@ public class PlayState extends State {
             // endgame btn
 
             float adj_width = cam.position.x - cam.viewportWidth/2 ;
-//            float adj_height = cam.viewportHeight -  cam.viewportHeight/2;
 
             if(Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
                 sb.draw(playb, adj_width + 5 - 2, 5 - 2, playb.getWidth()/2 + 4, playb.getHeight()/2 + 4);
@@ -302,8 +323,6 @@ public class PlayState extends State {
             }else {
                 sb.draw(menu, adj_width + cam.viewportWidth - menu.getWidth()/2, 5,menu.getWidth()/2 , menu.getHeight()/2);
             }
-
-
         }
 
         //score screen
@@ -392,5 +411,28 @@ public class PlayState extends State {
         if (cam.position.x - cam.viewportWidth/2 > groundPos2.x + ground.getWidth()){
             groundPos2.add(ground.getWidth()*2, 0);
         }
+    }
+
+
+}
+
+class Clock extends JTextField implements Runnable{
+
+    int time = 0;
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 60*60; i++){
+            time = i;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int getTime(){
+        return time;
     }
 }
