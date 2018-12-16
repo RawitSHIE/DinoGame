@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import dino.game.oop.DinoGame;
+import dino.game.oop.music.MainSong;
 
 public class MenuState extends State {
     private Texture background;
@@ -12,9 +13,11 @@ public class MenuState extends State {
     private Texture leaderBtn;
     private Texture exitBtn;
     private boolean leaderboard = false;
+    private MainSong mainSong;
 
-    public MenuState(GameStateManager gsm) {
+    public MenuState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
+
         cam.setToOrtho(false, DinoGame.WIDTH,DinoGame.HEIGHT);
         background = new Texture("bg.png");
         playBtn = new Texture("playbtn.png");
@@ -24,15 +27,17 @@ public class MenuState extends State {
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
         cam.position.set(0,cam.position.y,0);
 
+        this.mainSong = mainSong;
+
     }
 
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched() && Gdx.input.getX() >= 545 && Gdx.input.getX() <= 734 && Gdx.input.getY() >= 264 && Gdx.input.getY() <= 452 && !leaderboard){
-            gsm.set(new PlayState(gsm));
+            gsm.set(new PlayState(gsm, mainSong));
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711 && !leaderboard){
-            gsm.set(new HighScoreState(gsm));
+            gsm.set(new HighScoreState(gsm, mainSong));
         }
         if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
             System.exit(0);
