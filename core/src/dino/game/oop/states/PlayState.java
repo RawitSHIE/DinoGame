@@ -339,7 +339,6 @@ public class PlayState extends State {
 
         //game over
         if (collide){
-            //debug
             if (!set){
                 ishighscore = Score.setScore(score);
                 set = true;
@@ -468,6 +467,7 @@ public class PlayState extends State {
     @Override
     public void dispose() {
         bg.dispose();
+        head.dispose();
         mover.dispose();
         ground.dispose();
         score_one.dispose();

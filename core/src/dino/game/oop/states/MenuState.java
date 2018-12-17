@@ -16,13 +16,11 @@ public class MenuState extends State {
     private Texture exitBtn;
     private Texture gameLogo;
 
-    private Texture white;
     private boolean leaderboard = false;
     private MainSong mainSong;
     private Sound c_btn;
 
     private float time;
-
     private Texture dust, backdrop;
 
     private String[] num_frame;
@@ -48,7 +46,6 @@ public class MenuState extends State {
         this.mainSong = mainSong;
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
 
-        dust = new Texture("dust_fall.gif");
 
         time = 0;
         backdrop = new Texture("backdrop.png");

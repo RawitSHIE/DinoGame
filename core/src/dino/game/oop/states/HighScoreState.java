@@ -16,16 +16,34 @@ public class HighScoreState extends State{
 
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
 
-    private Texture background, scoreboard, score, rank, one, ten;
+    private Texture background, scoreboard, score;
     private ArrayList<Texture> badge= new ArrayList<Texture>();
     private Texture homeBtn, exitBtn;
 
     private MainSong mainSong;
     private Sound c_btn;
 
+    private float time;
+    private Texture dust, backdrop;
+
+    private String[] num_frame;
+
+    private ArrayList<Texture> one, ten, rank;
+
 
     public HighScoreState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
+
+        num_frame = new String[20];
+
+        one = new ArrayList<Texture>();
+        ten = new ArrayList<Texture>();
+        rank = new ArrayList<Texture>();
+
+        for (int i = 0; i < 20 ; i++){
+            num_frame[i] = "gif/"+Integer.toString(i+1)+".gif";
+        }
+
         cam.setToOrtho(false, DinoGame.WIDTH,DinoGame.HEIGHT);
         background = new Texture("bg.png");
         scoreboard = new Texture("board.png");
@@ -42,9 +60,17 @@ public class HighScoreState extends State{
         this.mainSong = mainSong;
 
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
-        one  = new Texture(number[0]);
-        ten = new Texture(number[0]);
-        rank = new Texture(number[0]);
+
+        for (int i = 0 ; i < 3 ; i++){
+            one.add(new Texture(number[Score.getScore().get(i)%10]));
+            ten.add(new Texture(number[Score.getScore().get(i)/10]));
+            rank.add(new Texture(number[i+1]));
+        }
+
+
+        time = 0;
+        backdrop = new Texture("backdrop.png");
+        dust = new Texture(num_frame[0]);
     }
 
     @Override
@@ -68,6 +94,16 @@ public class HighScoreState extends State{
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(background, cam.position.x - cam.viewportWidth/2,0, DinoGame.WIDTH, DinoGame.HEIGHT);
+
+        time += 0.5;
+        dust.dispose();
+        dust = new Texture(num_frame[(int) time%20]);
+
+        sb.draw(dust, 0,0, 1280, 720);
+
+        sb.draw(backdrop, 0 ,0);
+
+
         sb.draw(scoreboard,
                 cam.position.x - scoreboard.getWidth()/4 ,
                 cam.position.y - scoreboard.getHeight()/4,
@@ -79,16 +115,9 @@ public class HighScoreState extends State{
                 cam.position.y + 100,
                 score.getWidth()/2,
                 score.getHeight()/2);
-        one.dispose();
-        ten.dispose();
-        rank.dispose();
+
 
         for (int i = 0; i < 3; i++){
-
-            one  = new Texture(number[Score.getScore().get(i)%10]);
-            ten = new Texture(number[Score.getScore().get(i)/10]);
-            rank = new Texture(number[i+1]);
-
             // Draw Rank
             sb.draw(badge.get(i) ,
                     cam.position.x - (NUM_WIDTH*4 + 10),
@@ -96,17 +125,17 @@ public class HighScoreState extends State{
                     NUM_WIDTH*2,
                     NUM_HEIGHT*2);
 
-            sb.draw(rank ,
+            sb.draw(rank.get(i) ,
                     cam.position.x - (NUM_WIDTH*2),
                     cam.viewportHeight/2 - NUM_HEIGHT*2*i + 10,
                     NUM_WIDTH*2,
                     NUM_HEIGHT*2);
-            sb.draw(ten ,
+            sb.draw(ten.get(i) ,
                     cam.position.x + 100 - (NUM_WIDTH + NUM_WIDTH*2) - 2,
                     cam.viewportHeight/2 - NUM_HEIGHT*2*i + 10,
                     NUM_WIDTH*2,
                     NUM_HEIGHT*2);
-            sb.draw(one ,
+            sb.draw(one.get(i) ,
                     cam.position.x + 100 - NUM_WIDTH - 2,
                     cam.viewportHeight/2 - NUM_HEIGHT*2*i + 10,
                     NUM_WIDTH*2,
@@ -132,13 +161,16 @@ public class HighScoreState extends State{
     public void dispose() {
         background.dispose();
 
-        for (Texture i : badge){
-            i.dispose();
+        for (int i = 0 ; i < 3; i++){
+            badge.get(i).dispose();
+            rank.get(i).dispose();
+            ten.get(i).dispose();
+            one.get(i).dispose();
         }
 
-        rank.dispose();
-        ten.dispose();
-        one.dispose();
+        dust.dispose();
+        backdrop.dispose();
+
         homeBtn.dispose();
         exitBtn.dispose();
 
