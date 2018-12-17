@@ -50,6 +50,7 @@ public class PlayState extends State {
     private double health = 100;
     private boolean ishighscore = false;
     private boolean set = false;
+    private boolean isplay = false;
 
 
 //    private Music c_sound;
@@ -58,10 +59,11 @@ public class PlayState extends State {
     private ArrayList<Texture> badge = new ArrayList<Texture>();
 
     private Music haweii;
-    private Sound c_sound, heart, c_btn, c_hit;
+    private Sound c_sound, heart, c_btn, c_hit, c_highscore;
 
     private MainSong mainSong;
     private int time = 300;
+
 
     private float init;
 
@@ -125,8 +127,7 @@ public class PlayState extends State {
         heart = Gdx.audio.newSound(Gdx.files.internal("Sound/heart.wav"));
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
         c_hit = Gdx.audio.newSound(Gdx.files.internal("Sound/hit.mp3"));
-
-
+        c_highscore = Gdx.audio.newSound(Gdx.files.internal("Sound/highscore.mp3"));
     }
 
     @Override
@@ -206,6 +207,11 @@ public class PlayState extends State {
         } else {
             bird.updateAnimation(dt);
             head.updateAnimation(dt);
+
+            if (ishighscore && !(isplay)){
+                c_highscore.play(0.2f);
+                isplay = true;
+            }
         }
 
     }
@@ -252,11 +258,13 @@ public class PlayState extends State {
                 set = true;
             }
             if (ishighscore){
+
                 sb.draw(high,
                         cam.position.x - board.getWidth()/8,
-                        cam.position.y - board.getHeight()/8,
+                        cam.position.y - board.getHeight()/10,
                         board.getWidth()/4,
                         board.getHeight()/4);
+
             }else{
                 sb.draw(board,
                         cam.position.x - board.getWidth()/8,
@@ -395,6 +403,9 @@ public class PlayState extends State {
         blank.dispose();
 
         haweii.dispose();
+        c_highscore.dispose();
+        c_btn.dispose();
+        c_hit.dispose();
 
         for (Texture i : badge){
             i.dispose();

@@ -12,6 +12,7 @@ public class DesktopLauncher {
         config.width = DinoGame.WIDTH;
         config.height = DinoGame.HEIGHT;
         config.title = DinoGame.Title;
+        config.resizable = false;
 
 		new LwjglApplication(new DinoGame(), config);
 	}
