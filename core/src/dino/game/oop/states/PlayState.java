@@ -359,29 +359,31 @@ public class PlayState extends State {
                         board.getHeight()/4);
             }
 
+            // Draw Score
+            int indexone = score % 10;
+            int indexten = (int) Math.floor(score/10);
+
+            score_one.dispose();
+            score_ten.dispose();
+
+            score_one = new Texture(number[indexone]);
+            score_ten = new Texture(number[indexten]);
+
+            sb.draw(score_one,
+                    cam.position.x - 60 + NUM_WIDTH ,
+                    cam.viewportHeight/2 - 10);
+            sb.draw(score_ten,
+                    cam.position.x - 60,
+                    cam.viewportHeight/2 - 10);
+
+
+            // Draw Rank
             for (Integer i = 0; i < 3; i++){
                 one  = new Texture(number[Score.getScore().get(i)%10]);
                 ten = new Texture(number[Score.getScore().get(i)/10]);
                 rank = new Texture(number[i+1]);
 
-                // Draw Score
-                int indexone = score % 10;
-                int indexten = (int) Math.floor(score/10);
 
-                score_one.dispose();
-                score_ten.dispose();
-
-                score_one = new Texture(number[indexone]);
-                score_ten = new Texture(number[indexten]);
-
-                sb.draw(score_one,
-                        cam.position.x - 60 + NUM_WIDTH ,
-                        cam.viewportHeight/2 - 10);
-                sb.draw(score_ten,
-                        cam.position.x - 60,
-                        cam.viewportHeight/2 - 10);
-
-                // Draw Rank
                 sb.draw(badge.get(i),
                         cam.position.x + 10,
                         cam.viewportHeight/2  - NUM_HEIGHT/2*i + 10,
