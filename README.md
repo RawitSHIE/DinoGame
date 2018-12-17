@@ -21,3 +21,21 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 |![https://www.facebook.com/kawisara.srn](/resource/toon.jpg)|Kawisara|Bunyen|[@zelotype](https://github.com/zelotype)|60070002|
 |![https://www.facebook.com/rawitgun](/resource/gun.jpg)|Rawit|Lohakhachornphan|[@RawitSHIE](https://github.com/RawitSHIEK)|60070081|
 |![https://www.facebook.com/profile.php?id=100002495318131p](/resource/pok.jpg)|Supakit|Theanthunyakit|[@POKINBKK](https://github.com/POKINBKK)|60070098|
+
+
+---
+
+# ![](/Resource/Supervisor.png) Assistant Teacher
+|ผศ.ดร. ธนิศา นุ่มนนท์|
+|:-:|
+|![](/resource/Thanisa.png)|
+
+รายงานนี้เป็นส่วนหนึ่งของวิชา Computer Programming (รหัส 06016206)
+
+คณะเทคโนโลยีสารสนเทศ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+
+---
+
+Faculty of Information Technology
+
+King Mongkut's Institute of Technology Ladkrabang
