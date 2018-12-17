@@ -15,6 +15,10 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 
 # ![](/resource/idea.png) How to Play
 
+1.เมื่อเข้าเกมมาผู้เล่นจะเห็นหน้าต่างที่มีปุ่ม 3 ปุ่ม คือ ปุ่ม Play(กลาง), ปุ่ม Scoreboard(ซ้าย), ปุ่ม Exit(ขวา)
+
+![](/resource/screenshot-1.gif) 
+
 ---
 
 # ![](/resource/users-1.png) Team Members
