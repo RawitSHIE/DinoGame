@@ -15,7 +15,7 @@ public class DinoGame extends ApplicationAdapter {
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 
-	public static final String Title = "DinoRun";
+	public static final String Title = "CaveWings";
 	private GameStateManager gsm;
 	private SpriteBatch batch;
 	public MainSong mainSong;

@@ -433,24 +433,3 @@ public class PlayState extends State {
 
 
 }
-
-class Clock extends JTextField implements Runnable{
-
-    int time = 0;
-
-    @Override
-    public void run() {
-        for (int i = 0; i < 60*60; i++){
-            time = i;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public int getTime(){
-        return time;
-    }
-}

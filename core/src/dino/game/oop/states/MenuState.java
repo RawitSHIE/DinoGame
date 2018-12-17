@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import dino.game.oop.DinoGame;
 import dino.game.oop.music.MainSong;
 
@@ -14,9 +13,15 @@ public class MenuState extends State {
     private Texture leaderBtn;
     private Texture exitBtn;
     private Texture gameLogo;
+
+    private Texture white;
     private boolean leaderboard = false;
     private MainSong mainSong;
     private Sound c_btn;
+
+    private int time;
+    private boolean flag;
+
 
     public MenuState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
@@ -32,6 +37,11 @@ public class MenuState extends State {
         cam.position.set(0,cam.position.y,0);
         this.mainSong = mainSong;
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
+
+
+
+        time = 100;
+        flag = true;
 
     }
 
@@ -58,9 +68,23 @@ public class MenuState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
+        //firstpage effect
+        if (flag){
+            time--;
+            if (time == 0){
+                flag = false;
+            }
+        }else if (flag == false){
+            time++;
+            if (time == 150){
+                flag = true;
+            }
+        }
+
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(background, 0,0, DinoGame.WIDTH, DinoGame.HEIGHT);
+
 
         sb.draw(gameLogo, DinoGame.WIDTH / 2 - gameLogo.getWidth() / 2, DinoGame.HEIGHT / 2 + 100);
 
@@ -68,9 +92,6 @@ public class MenuState extends State {
             sb.draw(playBtn, DinoGame.WIDTH / 2 - playBtn.getWidth() / 2 - 2, DinoGame.HEIGHT / 2 - 100 - 2 - 50, playBtn.getWidth()+4 , playBtn.getHeight()+4);
         }else{
             sb.draw(playBtn, DinoGame.WIDTH / 2 - playBtn.getWidth() / 2, DinoGame.HEIGHT / 2 - 100 - 50);
-        }
-
-        if(!leaderboard) {
         }
 
 
@@ -85,7 +106,17 @@ public class MenuState extends State {
         }else{
             sb.draw(exitBtn, DinoGame.WIDTH -125, 5);
         }
+
+
+
+
+
+
+        System.out.println(time);
+
         sb.end();
+
+
     }
 
     @Override
