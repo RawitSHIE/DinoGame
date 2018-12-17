@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import dino.game.oop.DinoGame;
@@ -13,7 +12,6 @@ import dino.game.oop.extra.Score;
 import dino.game.oop.music.MainSong;
 import dino.game.oop.sprites.*;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,12 +20,12 @@ public class PlayState extends State {
     private static final int OBS_COUNT = 4;
     private static final int COINS_COUNT = 6;
     private static final int COINS_SPACING = (OBS_SPACING + (Obstacle.OBS_WIDTH - Coin.COIN_WIDTH))*1;
-    private static final int POTION_SPACING = (OBS_SPACING + Obstacle.OBS_WIDTH) * 5 - Coin.COIN_WIDTH;
+    private static final int POTION_SPACING = (OBS_SPACING + Obstacle.OBS_WIDTH) * 7 - Coin.COIN_WIDTH;
     private static final int GROUND_Y_OFFSET = -50;
     private static final int NUM_WIDTH = 24;
     private static final int NUM_HEIGHT = 36;
 
-    private Bird bird;
+    private Mover mover;
     private Head head;
     private Vector2 groundPos1, groundPos2;
     private boolean collide;
@@ -86,7 +84,7 @@ public class PlayState extends State {
         bg = new Texture("bg-play.png");
         rand = new Random();
         ground = new Texture("new-ground.png");
-        bird = new Bird(20,ground.getHeight() + GROUND_Y_OFFSET);
+        mover = new Mover(20,ground.getHeight() + GROUND_Y_OFFSET);
         head = new Head(20,150);
 
         bgh = new Texture("white-dot.png");
@@ -122,7 +120,7 @@ public class PlayState extends State {
             coins.add(new Coin( i * (COINS_SPACING + Coin.COIN_WIDTH) + (OBS_SPACING + 2 * Obstacle.OBS_WIDTH)/2 - Coin.COIN_WIDTH/2));
         }
 
-//      blood
+        //blood
         bloodbg = new Texture("bg-blood.png");
         bloodframe = new Texture("blood-frame.png");
 
@@ -146,6 +144,9 @@ public class PlayState extends State {
         white = new Texture(num_flash[0]);
         dust = new Texture(num_frame[0]);
         expo = new Texture(num_expo[0]);
+
+        score_one = new Texture(number[0]);
+        score_ten = new Texture(number[0]);
     }
 
     @Override
@@ -170,14 +171,14 @@ public class PlayState extends State {
         handleInput();
         if (!collide) {
             if (time < 0){
-                bird.update(dt);
+                mover.update(dt);
                 updateGround();
                 head.update(dt, cam.position.x);
 
                 System.out.println(time);
             }else{
             }
-            cam.position.x = bird.getPosition().x + 80;
+            cam.position.x = mover.getPosition().x + 80;
 
             for (Obstacle obstacle : obstacles) {
                 if (cam.position.x - (cam.viewportWidth / 2) > obstacle.getPostop().x + obstacle.getTopobs().getWidth()) {
@@ -209,18 +210,18 @@ public class PlayState extends State {
 
                 }
             }
-
+            //potion
             if (cam.position.x - (cam.viewportWidth / 2) > potion.getPospotions().x + potion.getPotions().getWidth()) {
-                potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
+                potion.reposition(potion.getPospotions().x + ((potion.getPotions().getWidth() + POTION_SPACING)));
             }
 
             if (potion.collides(head.getBounds())) {
-                potion.reposition(potion.getPospotions().x + ((potion.getPotions().getHeight() + POTION_SPACING)));
+                potion.reposition(potion.getPospotions().x + ((potion.getPotions().getWidth() + POTION_SPACING)));
                 heart.play();
-                if (health + 10 >= 100) {
-                    health = 99;
+                if (health + 38 >= 100) {
+                    health = 100;
                 } else {
-                    health += 20;
+                    health += 38;
                 }
             }
 
@@ -231,7 +232,7 @@ public class PlayState extends State {
             }
             cam.update();
         } else {
-            bird.updateAnimation(dt);
+            mover.updateAnimation(dt);
             head.updateAnimation(dt);
 
             if (ishighscore && !(isplay)){
@@ -252,7 +253,7 @@ public class PlayState extends State {
         sb.draw(bg, cam.position.x - cam.viewportWidth/2, 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth(), 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
-        sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
+        sb.draw(mover.getTexture(), mover.getPosition().x, mover.getPosition().y);
         sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
 
 
@@ -313,9 +314,6 @@ public class PlayState extends State {
 
         }
 
-
-
-
         //countdown
         int tt = Math.max(time/60 , 0);
 
@@ -360,6 +358,9 @@ public class PlayState extends State {
                 // Draw Score
                 int indexone = score % 10;
                 int indexten = (int) Math.floor(score/10);
+
+                score_one.dispose();
+                score_ten.dispose();
 
                 score_one = new Texture(number[indexone]);
                 score_ten = new Texture(number[indexten]);
@@ -457,7 +458,7 @@ public class PlayState extends State {
     @Override
     public void dispose() {
         bg.dispose();
-        bird.dispose();
+        mover.dispose();
         ground.dispose();
         score_one.dispose();
         score_ten.dispose();
@@ -469,7 +470,6 @@ public class PlayState extends State {
         rank.dispose();
         potion.dispose();
 
-        board.dispose();
         high.dispose();
 
         bloodframe.dispose();
@@ -495,6 +495,7 @@ public class PlayState extends State {
             c.dispose();
         }
 
+
         System.out.println("PlayState Dispose");
     }
 
@@ -507,6 +508,5 @@ public class PlayState extends State {
             groundPos2.add(ground.getWidth()*2, 0);
         }
     }
-
 
 }

@@ -82,7 +82,6 @@ public class MenuState extends State {
         //firstpage effect
 
         time += 0.5;
-        System.out.println(time);
         dust.dispose();
         dust = new Texture(num_frame[(int) time%20]);
 

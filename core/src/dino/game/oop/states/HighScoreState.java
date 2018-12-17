@@ -42,6 +42,9 @@ public class HighScoreState extends State{
         this.mainSong = mainSong;
 
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
+        one  = new Texture(number[0]);
+        ten = new Texture(number[0]);
+        rank = new Texture(number[0]);
     }
 
     @Override
@@ -76,8 +79,12 @@ public class HighScoreState extends State{
                 cam.position.y + 100,
                 score.getWidth()/2,
                 score.getHeight()/2);
+        one.dispose();
+        ten.dispose();
+        rank.dispose();
 
         for (int i = 0; i < 3; i++){
+
             one  = new Texture(number[Score.getScore().get(i)%10]);
             ten = new Texture(number[Score.getScore().get(i)/10]);
             rank = new Texture(number[i+1]);
