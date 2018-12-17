@@ -52,6 +52,7 @@ public class MenuState extends State {
 
         time = 0;
         backdrop = new Texture("backdrop.png");
+        dust = new Texture(num_frame[0]);
 
     }
 
@@ -82,6 +83,7 @@ public class MenuState extends State {
 
         time += 0.5;
         System.out.println(time);
+        dust.dispose();
         dust = new Texture(num_frame[(int) time%20]);
 
 
@@ -129,6 +131,8 @@ public class MenuState extends State {
         exitBtn.dispose();
         c_btn.dispose();
         gameLogo.dispose();
+        dust.dispose();
+        backdrop.dispose();
         System.out.println("MenuState Dispose");
     }
 }

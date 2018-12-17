@@ -38,6 +38,8 @@ public class PlayState extends State {
     private Texture one, ten, rank;
     private Texture playb, menu;
 
+    private Texture dust, white, expo;
+
     private Texture bloodframe, bloodbg;
 
     private Array<Coin> coins;
@@ -52,9 +54,6 @@ public class PlayState extends State {
     private boolean set = false;
     private boolean isplay = false;
 
-
-//    private Music c_sound;
-
     private String[] number = {"0.png", "1.png" ,"2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"};
     private ArrayList<Texture> badge = new ArrayList<Texture>();
 
@@ -63,14 +62,25 @@ public class PlayState extends State {
 
     private MainSong mainSong;
     private int time = 300;
-
-
-    private float init;
+    private int count = 0;
+    private String[] num_frame, num_flash, num_expo;
 
 
     public PlayState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
         this.mainSong = mainSong;
+
+        num_frame = new String[20];
+        num_flash = new String[20];
+        num_expo = new String[30];
+        for (int i = 0; i < 20 ; i++){
+            num_frame[i] = "gif/"+Integer.toString(i+1)+".gif";
+            num_flash[i] = "flash/"+Integer.toString(i+1)+".png";
+        }
+        for (int j = 0; j < 90 ; j += 3){
+            num_expo[j/3] = "expo/"+Integer.toString(j+1)+".png";
+        }
+
         mainSong.pause();
         cam.setToOrtho(false, DinoGame.WIDTH/2 , DinoGame.HEIGHT/2);
         bg = new Texture("bg-play.png");
@@ -90,6 +100,11 @@ public class PlayState extends State {
         playb = new Texture("playbutton.png");
         menu = new Texture("homebtn.png");
         blank = new Texture("FlyingBird.png");
+
+        white = new Texture("white-dot.png");
+
+        score_one = new Texture(number[0]);
+        score_ten = new Texture(number[0]);
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -128,6 +143,9 @@ public class PlayState extends State {
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
         c_hit = Gdx.audio.newSound(Gdx.files.internal("Sound/hit.mp3"));
         c_highscore = Gdx.audio.newSound(Gdx.files.internal("Sound/highscore.mp3"));
+        white = new Texture(num_flash[0]);
+        dust = new Texture(num_frame[0]);
+        expo = new Texture(num_expo[0]);
     }
 
     @Override
@@ -180,6 +198,14 @@ public class PlayState extends State {
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
                     c_sound.play(0.9f);
                     score++;
+                    int indexone = score % 10;
+                    int indexten = (int) Math.floor(score/10);
+
+                    score_one.dispose();
+                    score_ten.dispose();
+
+                    score_one = new Texture(number[indexone]);
+                    score_ten = new Texture(number[indexten]);
 
                 }
             }
@@ -218,6 +244,9 @@ public class PlayState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
+
+        count ++;
+
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(bg, cam.position.x - cam.viewportWidth/2, 0);
@@ -225,6 +254,8 @@ public class PlayState extends State {
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
         sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
+
+
 
         for (Obstacle obstacle : obstacles){
             sb.draw(obstacle.getTopobs(), obstacle.getPostop().x , obstacle.getPostop().y);
@@ -236,6 +267,54 @@ public class PlayState extends State {
         }
 
         sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
+
+//        dust stage
+        white.dispose();
+        dust.dispose();
+        expo.dispose();
+
+        white = new Texture(num_flash[count%20]);
+        dust = new Texture(num_frame[count%20]);
+        expo = new Texture(num_expo[count%30]);
+
+        if (count%2000 >= 500){
+            if ((count%2000 >= 500 && count%2000 <= 520) || (count%2000 >= 980 && count%2000 <= 1000)){
+                sb.draw(white, cam.position.x - cam.viewportWidth/2,
+                        cam.position.y-cam.viewportHeight/2,
+                        cam.viewportWidth,
+                        cam.viewportHeight);
+            }
+
+            if (count%2000 > 510 && count%2000 < 990 ){
+                sb.draw(dust,
+                        cam.position.x - cam.viewportWidth/2,
+                        cam.position.y-cam.viewportHeight/2,
+                        cam.viewportWidth,
+                        cam.viewportHeight);
+            }
+
+        }
+
+        if (count%2000 >= 1500){
+            if ((count%2000 >= 1500 && count%2000 <= 1520) || (count%2000 >= 1980 && count%2000 <= 2000)){
+                sb.draw(white, cam.position.x - cam.viewportWidth/2,
+                        cam.position.y-cam.viewportHeight/2,
+                        cam.viewportWidth,
+                        cam.viewportHeight);
+            }
+
+            if (count%2000 > 1510 && count%1000 < 1990 ){
+                sb.draw(expo,
+                        cam.position.x - cam.viewportWidth/2,
+                        cam.position.y-cam.viewportHeight/2,
+                        cam.viewportWidth,
+                        cam.viewportHeight);
+            }
+
+        }
+
+
+
 
         //countdown
         int tt = Math.max(time/60 , 0);
@@ -340,11 +419,9 @@ public class PlayState extends State {
         }
 
         //score screen
-        int indexone = score % 10;
+
         int indexten = (int) Math.floor(score/10);
 
-        score_one = new Texture(number[indexone]);
-        score_ten = new Texture(number[indexten]);
         sb.draw(score_one,
                 cam.position.x + 200 ,
                 cam.viewportHeight - 50);
