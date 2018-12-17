@@ -1,8 +1,10 @@
 ![](/resource/readme-intro.gif)
-# Endless-Running Game : Cave Wings
+# ![](/resource/flag-3.png)  Endless-Running Game : Cave Wings
 Cave Wings เป็นเกมแบบไม่มีที่สิ้นสุด (Endless-Running Game) โดยมีตัวละครหลักคือ นกสีฟ้า และมีการบังคับโดยการใช้เม้าส์(Mouse) บังคับนกสีฟ้าเพื่อหลบสิ่งกีดขวาง และ เก็บไอเท็ม(เหรียญ และ หัวใจ)
 
-## Our Tools
+
+# ![](/resource/settings.png) Our Tools
+
 * IntelliJ IDEA
 * Visual Studio Code
 * Adobe Photoshop
@@ -11,11 +13,11 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 * libGDX
 
 
-# ![](/Resource/Help.png) How to Play
+# ![](/resource/idea.png) How to Play
 
 ---
 
-# ![](/Resource/Person.png) Team Members
+# ![](/resource/users-1.png) Team Members
 |  |ชื่อ|นามสกุล|GitHub Username|รหัสนักศึกษา|
 |:-:|--|------|---------------|---------|
 |![https://www.facebook.com/kawisara.srn](/resource/toon.jpg)|Kawisara|Bunyen|[@zelotype](https://github.com/zelotype)|60070002|
@@ -25,7 +27,7 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 
 ---
 
-# ![](/Resource/Supervisor.png) Assistant Teacher
+# ![](/resource/star-1.png) Assistant Teacher
 |ผศ.ดร. ธนิศา นุ่มนนท์|
 |:-:|
 |![](/resource/Thanisa.png)|
