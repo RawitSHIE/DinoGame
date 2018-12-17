@@ -41,6 +41,7 @@ public class Bird {
             position.y = 0;
         }
         bounds.setPosition(position.x, position.y);
+        System.out.println(dt);
     }
 
     public void updateAnimation(float dt){

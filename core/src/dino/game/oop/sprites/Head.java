@@ -16,7 +16,7 @@ public class Head {
     private Vector3 position;
     private Vector3 velocity;
     private Animation birdAnimation;
-    Texture texture = new Texture("birdanimation.png");
+    Texture texture = new Texture("FlyingBird.png");
 
     private int framecount  = 0;
 
@@ -25,8 +25,8 @@ public class Head {
     public Head(int x, int y){
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0,0,0);
-        birdAnimation = new Animation(new TextureRegion(texture), 3,0.5f);
-        bounds = new Rectangle(x, y, texture.getWidth() /3, texture.getHeight());
+        birdAnimation = new Animation(new TextureRegion(texture), 4,0.5f);
+        bounds = new Rectangle(x, y, texture.getWidth() /4, texture.getHeight());
     }
 //Gdx.input.isButtonPressed(Input.Buttons.LEFT)
     public void update(float dt, float x){
@@ -34,9 +34,12 @@ public class Head {
 //        System.out.println(framecount);
         birdAnimation.update(dt);
 //        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && framecount > 15){
-            position.x = Gdx.input.getX() + x - 650;
-            position.y = 460 - Gdx.input.getY();
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+            int xval = Gdx.input.getX();
+            int yval = Gdx.input.getY();
+            position.x = x + (xval/2) - 335;
+            position.y = 350 - (yval /2);
+            System.out.println("Y:"+yval);
 //            velocity.y = 400;
 //            System.out.println("Space Pressed");
             velocity.add(dt/2, 0,0);
@@ -51,19 +54,20 @@ public class Head {
         position.add(MOVEMENT * dt ,velocity.y, 0);
         velocity.scl(1/dt);
 
-
-        if (position.y < 61){
-            position.y = 61;
-        }
-        if(x - (Gdx.input.getX() + x -650) > 323){
-            position.x = x - 323;
-        }
-
-        if((Gdx.input.getX() + x -650) - x > 284){
-            position.x = x + 284;
-        }
-        if (position.y > 336){
-            position.y = 336;
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+            if (position.y < 61){
+                position.y = 61;
+            }
+//            if(x - (Gdx.input.getX() + x -650) > 323){
+//                position.x = x - 323;
+//            }
+//
+//            if((Gdx.input.getX() + x -650) - x > 284){
+//                position.x = x + 284;
+//            }
+            if (position.y > 336 ){
+                position.y = 336;
+            }
         }
         bounds.setPosition(position.x, position.y);
     }

@@ -13,6 +13,7 @@ public class MenuState extends State {
     private Texture playBtn;
     private Texture leaderBtn;
     private Texture exitBtn;
+    private Texture gameLogo;
     private boolean leaderboard = false;
     private MainSong mainSong;
     private Sound c_btn;
@@ -25,10 +26,10 @@ public class MenuState extends State {
         playBtn = new Texture("playbtn.png");
         leaderBtn = new Texture("leaderbutton.png");
         exitBtn = new Texture("exitbutton.png");
+        gameLogo = new Texture("Logo.png");
 
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
         cam.position.set(0,cam.position.y,0);
-
         this.mainSong = mainSong;
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
 
@@ -61,10 +62,12 @@ public class MenuState extends State {
         sb.begin();
         sb.draw(background, 0,0, DinoGame.WIDTH, DinoGame.HEIGHT);
 
-        if ( Gdx.input.getX() >= 545 && Gdx.input.getX() <= 734 && Gdx.input.getY() >= 264 && Gdx.input.getY() <= 452 && !leaderboard){
-            sb.draw(playBtn, DinoGame.WIDTH / 2 - playBtn.getWidth() / 2 - 2, DinoGame.HEIGHT / 2 - 100 - 2, playBtn.getWidth()+4 , playBtn.getHeight()+4);
+        sb.draw(gameLogo, DinoGame.WIDTH / 2 - gameLogo.getWidth() / 2, DinoGame.HEIGHT / 2 + 100);
+
+        if ( Gdx.input.getX() >= 545 && Gdx.input.getX() <= 734 && Gdx.input.getY() >= 312 && Gdx.input.getY() <= 502 && !leaderboard){
+            sb.draw(playBtn, DinoGame.WIDTH / 2 - playBtn.getWidth() / 2 - 2, DinoGame.HEIGHT / 2 - 100 - 2 - 50, playBtn.getWidth()+4 , playBtn.getHeight()+4);
         }else{
-            sb.draw(playBtn, DinoGame.WIDTH / 2 - playBtn.getWidth() / 2, DinoGame.HEIGHT / 2 - 100);
+            sb.draw(playBtn, DinoGame.WIDTH / 2 - playBtn.getWidth() / 2, DinoGame.HEIGHT / 2 - 100 - 50);
         }
 
         if(!leaderboard) {
@@ -92,6 +95,7 @@ public class MenuState extends State {
         leaderBtn.dispose();
         exitBtn.dispose();
         c_btn.dispose();
+        gameLogo.dispose();
         System.out.println("MenuState Dispose");
     }
 }
