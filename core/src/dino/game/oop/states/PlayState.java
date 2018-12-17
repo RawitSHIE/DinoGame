@@ -33,7 +33,7 @@ public class PlayState extends State {
     private Texture score_one, score_ten;
     private Texture bar, bgh;
     private Texture board, high;
-    private Texture one, ten, rank;
+    private ArrayList<Texture> one, ten, rank;
     private Texture playb, menu;
     private Texture sec, tur1, tur2;
 
@@ -63,6 +63,7 @@ public class PlayState extends State {
     private int time = 300;
     private int count = 0;
     private String[] num_frame, num_flash, num_expo;
+    private boolean isset;
 
 
     public PlayState(GameStateManager gsm, MainSong mainSong) {
@@ -152,6 +153,12 @@ public class PlayState extends State {
         sec = new Texture(number[0]);
         tur1 = new Texture("tur1.png");
         tur2 = new Texture("tur2.png");
+
+        one = new ArrayList<Texture>();
+        ten = new ArrayList<Texture>();
+        rank = new ArrayList<Texture>();
+
+        isset = false;
 
     }
 
@@ -342,6 +349,15 @@ public class PlayState extends State {
             if (!set){
                 ishighscore = Score.setScore(score);
                 set = true;
+                if (isset == false){
+                    for (int i = 0; i < 3 ; i++){
+                        one.add(new Texture(number[Score.getScore().get(i)%10]));
+                        ten.add(new Texture(number[Score.getScore().get(i)/10]));
+                        rank.add(new Texture(number[i+1]));
+                    }
+                    isset = true;
+                }
+
             }
             if (ishighscore){
 
@@ -379,10 +395,6 @@ public class PlayState extends State {
 
             // Draw Rank
             for (Integer i = 0; i < 3; i++){
-                one  = new Texture(number[Score.getScore().get(i)%10]);
-                ten = new Texture(number[Score.getScore().get(i)/10]);
-                rank = new Texture(number[i+1]);
-
 
                 sb.draw(badge.get(i),
                         cam.position.x + 10,
@@ -390,17 +402,17 @@ public class PlayState extends State {
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
 
-                sb.draw(rank ,
+                sb.draw(rank.get(i) ,
                         cam.position.x + 95 - (NUM_WIDTH*2 + NUM_WIDTH/2) - 2,
                         cam.viewportHeight/2  - NUM_HEIGHT/2*i + 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
-                sb.draw(ten ,
+                sb.draw(ten.get(i) ,
                         cam.position.x + 95 - (NUM_WIDTH + NUM_WIDTH/2) - 2,
                         cam.viewportHeight/2  - NUM_HEIGHT/2*i + 10,
                         NUM_WIDTH/2,
                         NUM_HEIGHT/2);
-                sb.draw(one ,
+                sb.draw(one.get(i) ,
                         cam.position.x + 95 - NUM_WIDTH - 2,
                         cam.viewportHeight/2 - NUM_HEIGHT/2*i + 10,
                         NUM_WIDTH/2,
@@ -477,9 +489,6 @@ public class PlayState extends State {
         board.dispose();
         bar.dispose();
         bgh.dispose();
-        one.dispose();
-        ten.dispose();
-        rank.dispose();
         potion.dispose();
 
         high.dispose();
@@ -500,8 +509,11 @@ public class PlayState extends State {
         tur1.dispose();
         tur2.dispose();
 
-        for (Texture i : badge){
-            i.dispose();
+        for (int i = 0 ; i < 3 ; i++){
+            badge.get(i).dispose();
+            one.get(i).dispose();
+            ten.get(i).dispose();
+            rank.get(i).dispose();
         }
 
         for (Obstacle obstacle : obstacles){
