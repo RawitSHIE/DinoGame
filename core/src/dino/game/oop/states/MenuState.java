@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dino.game.oop.DinoGame;
 import dino.game.oop.music.MainSong;
 
+import javax.xml.soap.Text;
+
 public class MenuState extends State {
     private Texture background;
     private Texture playBtn;
@@ -19,12 +21,20 @@ public class MenuState extends State {
     private MainSong mainSong;
     private Sound c_btn;
 
-    private int time;
-    private boolean flag;
+    private float time;
 
+    private Texture dust, backdrop;
+
+    private String[] num_frame;
 
     public MenuState(GameStateManager gsm, MainSong mainSong) {
         super(gsm);
+
+        num_frame = new String[20];
+
+        for (int i = 0; i < 20 ; i++){
+            num_frame[i] = "gif/"+Integer.toString(i+1)+".gif";
+        }
 
         cam.setToOrtho(false, DinoGame.WIDTH,DinoGame.HEIGHT);
         background = new Texture("bg.png");
@@ -38,10 +48,10 @@ public class MenuState extends State {
         this.mainSong = mainSong;
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
 
+        dust = new Texture("dust_fall.gif");
 
-
-        time = 100;
-        flag = true;
+        time = 0;
+        backdrop = new Texture("backdrop.png");
 
     }
 
@@ -69,22 +79,19 @@ public class MenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         //firstpage effect
-        if (flag){
-            time--;
-            if (time == 0){
-                flag = false;
-            }
-        }else if (flag == false){
-            time++;
-            if (time == 150){
-                flag = true;
-            }
-        }
+
+        time += 0.5;
+        System.out.println(time);
+        dust = new Texture(num_frame[(int) time%20]);
+
 
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(background, 0,0, DinoGame.WIDTH, DinoGame.HEIGHT);
 
+        sb.draw(dust, 0,0, 1280, 720);
+
+        sb.draw(backdrop, 0 ,0);
 
         sb.draw(gameLogo, DinoGame.WIDTH / 2 - gameLogo.getWidth() / 2, DinoGame.HEIGHT / 2 + 100);
 
@@ -108,11 +115,6 @@ public class MenuState extends State {
         }
 
 
-
-
-
-
-        System.out.println(time);
 
         sb.end();
 
