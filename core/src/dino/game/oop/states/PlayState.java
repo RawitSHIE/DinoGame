@@ -35,6 +35,7 @@ public class PlayState extends State {
     private Texture board, high;
     private Texture one, ten, rank;
     private Texture playb, menu;
+    private Texture sec, tur1, tur2;
 
     private Texture dust, white, expo;
 
@@ -70,13 +71,13 @@ public class PlayState extends State {
 
         num_frame = new String[20];
         num_flash = new String[20];
-        num_expo = new String[30];
+        num_expo = new String[55];
         for (int i = 0; i < 20 ; i++){
             num_frame[i] = "gif/"+Integer.toString(i+1)+".gif";
             num_flash[i] = "flash/"+Integer.toString(i+1)+".png";
         }
-        for (int j = 0; j < 90 ; j += 3){
-            num_expo[j/3] = "expo/"+Integer.toString(j+1)+".png";
+        for (int j = 0; j < 55 ; j ++){
+            num_expo[j] = "explode/img"+Integer.toString(j+1)+".png";
         }
 
         mainSong.pause();
@@ -147,6 +148,11 @@ public class PlayState extends State {
 
         score_one = new Texture(number[0]);
         score_ten = new Texture(number[0]);
+
+        sec = new Texture(number[0]);
+        tur1 = new Texture("tur1.png");
+        tur2 = new Texture("tur2.png");
+
     }
 
     @Override
@@ -269,14 +275,31 @@ public class PlayState extends State {
 
         sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
 
-//        dust stage
+
+
+        //countdown
+        int tt = Math.max(time/60 , 0);
+        sec.dispose();
+        sec = new Texture(number[tt%10]);
+
+        sb.draw(sec, cam.viewportWidth/8, cam.viewportHeight/2);
+        if (time < 200)
+            sb.draw(tur1, cam.viewportWidth/8 - 230 ,cam.viewportHeight/2 + 50 );
+        if (time < 100)
+            sb.draw(tur2, cam.viewportWidth/8 - 230 ,cam.viewportHeight/2 - 70 );
+
+        //draw ground
+        sb.draw(ground ,groundPos1.x, groundPos1.y);
+        sb.draw(ground ,groundPos2.x, groundPos2.y);
+
+        // dust stage
         white.dispose();
         dust.dispose();
         expo.dispose();
 
         white = new Texture(num_flash[count%20]);
         dust = new Texture(num_frame[count%20]);
-        expo = new Texture(num_expo[count%30]);
+        expo = new Texture(num_expo[count%55]);
 
         if (count%2000 >= 500){
             if ((count%2000 >= 500 && count%2000 <= 520) || (count%2000 >= 980 && count%2000 <= 1000)){
@@ -295,7 +318,7 @@ public class PlayState extends State {
             }
 
         }
-
+        //Explosion
         if (count%2000 >= 1500){
             if ((count%2000 >= 1500 && count%2000 <= 1520) || (count%2000 >= 1980 && count%2000 <= 2000)){
                 sb.draw(white, cam.position.x - cam.viewportWidth/2,
@@ -306,26 +329,13 @@ public class PlayState extends State {
 
             if (count%2000 > 1510 && count%1000 < 1990 ){
                 sb.draw(expo,
-                        cam.position.x - cam.viewportWidth/2,
-                        cam.position.y-cam.viewportHeight/2,
-                        cam.viewportWidth,
-                        cam.viewportHeight);
+                        cam.position.x - cam.viewportWidth/2 - 60,
+                        cam.position.y - cam.viewportHeight/2 - 60,
+                        cam.viewportWidth + 120,
+                        cam.viewportHeight + 120);
             }
 
         }
-
-        //countdown
-        int tt = Math.max(time/60 , 0);
-
-        sb.draw(new Texture(number[tt%10]), cam.viewportWidth/8, cam.viewportHeight/2);
-        if (time < 200)
-            sb.draw(new Texture("tur1.png"), cam.viewportWidth/8 - 230 ,cam.viewportHeight/2 + 50 );
-        if (time < 100)
-            sb.draw(new Texture("tur2.png"), cam.viewportWidth/8 - 230 ,cam.viewportHeight/2 - 70 );
-
-        //draw ground
-        sb.draw(ground ,groundPos1.x, groundPos1.y);
-        sb.draw(ground ,groundPos2.x, groundPos2.y);
 
         //game over
         if (collide){
@@ -483,6 +493,10 @@ public class PlayState extends State {
         c_highscore.dispose();
         c_btn.dispose();
         c_hit.dispose();
+
+        sec.dispose();
+        tur1.dispose();
+        tur2.dispose();
 
         for (Texture i : badge){
             i.dispose();
