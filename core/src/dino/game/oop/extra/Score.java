@@ -1,5 +1,8 @@
 package dino.game.oop.extra;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +22,10 @@ public class Score {
 
     public static ArrayList<Integer> getScore(){
         try {
-            fileReader = new FileReader(LOC);
-            bufferedReader = new BufferedReader(fileReader);
+
+            FileHandle file = Gdx.files.internal(LOC);
+
+            bufferedReader = new BufferedReader(file.reader());
             rank = new ArrayList(3);
             String line = null;
             while ((line = bufferedReader.readLine()) != null){
