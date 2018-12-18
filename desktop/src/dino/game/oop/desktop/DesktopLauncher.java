@@ -1,5 +1,6 @@
 package dino.game.oop.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import dino.game.oop.DinoGame;
@@ -13,6 +14,9 @@ public class DesktopLauncher {
         config.height = DinoGame.HEIGHT;
         config.title = DinoGame.Title;
         config.resizable = false;
+
+
+        config.addIcon("icon.png", Files.FileType.Internal);
 
 		new LwjglApplication(new DinoGame(), config);
 	}
