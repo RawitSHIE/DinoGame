@@ -49,7 +49,7 @@ public class Obstacle {
     }
 
     public void reposition(float x){
-        postop.set(x, rand.nextInt(FLUCTUATION) + LOWEST_OPENING);//Tube Gab
+        postop.set(x, rand.nextInt(FLUCTUATION + TUBE_GAB) + LOWEST_OPENING);
         posbottom.set(x, postop.y - TUBE_GAB - bottomobs.getHeight());
         boundsTop.setPosition(postop.x, postop.y);
         boundsbottom.setPosition(posbottom.x, posbottom.y);
