@@ -5,6 +5,9 @@
 *.ear
 hs_err_pid*
 
+*.jar
+/core/assets/score.txt
+
 ## Robovm
 /ios/robovm-build/
 
