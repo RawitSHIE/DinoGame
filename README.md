@@ -58,6 +58,7 @@ java -jar WaveWings.jar
 - ถ้าต้องการที่ จะ Complie จาก IDE ต้องมีการ set `path` ของ Working directory เป็น `../DinoGame/core/assets`
 
 <img src="resource/path.png">
+<p align = "center"> รูปตัวอย่างของ Configuration ในการ set path ใน IntelliJ</p>
 
 ___
 
