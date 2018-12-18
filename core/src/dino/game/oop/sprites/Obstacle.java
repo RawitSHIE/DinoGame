@@ -24,7 +24,7 @@ public class Obstacle {
 
         rand = new Random();
 
-        postop = new Vector2(x ,rand.nextInt(FLUCTUATION) + LOWEST_OPENING + TUBE_GAB);
+        postop = new Vector2(x ,rand.nextInt(FLUCTUATION) + TUBE_GAB + LOWEST_OPENING);
         posbottom = new Vector2(x ,postop.y - TUBE_GAB - bottomobs.getHeight());
 
         boundsTop = new Rectangle(postop.x, postop.y, topobs.getWidth(), topobs.getHeight());
@@ -49,7 +49,7 @@ public class Obstacle {
     }
 
     public void reposition(float x){
-        postop.set(x, rand.nextInt(FLUCTUATION) + LOWEST_OPENING);
+        postop.set(x, rand.nextInt(FLUCTUATION) + LOWEST_OPENING);//Tube Gab
         posbottom.set(x, postop.y - TUBE_GAB - bottomobs.getHeight());
         boundsTop.setPosition(postop.x, postop.y);
         boundsbottom.setPosition(posbottom.x, posbottom.y);

@@ -140,7 +140,7 @@ public class PlayState extends State {
         // sound
         c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/coin.wav"));
         heart = Gdx.audio.newSound(Gdx.files.internal("Sound/heart.wav"));
-        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
+        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/click.wav"));
         c_hit = Gdx.audio.newSound(Gdx.files.internal("Sound/hit.mp3"));
         c_highscore = Gdx.audio.newSound(Gdx.files.internal("Sound/highscore.mp3"));
         white = new Texture(num_flash[0]);
@@ -169,11 +169,11 @@ public class PlayState extends State {
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 662 && Gdx.input.getX() <= 796 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
             mainSong.play();
-            c_btn.play(0.1f);
+            c_btn.play(0.5f);
             gsm.set(new MenuState(gsm, mainSong));
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 485 && Gdx.input.getX() <= 617 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
-            c_btn.play(0.1f);
+            c_btn.play(0.5f);
             gsm.set(new PlayState(gsm, mainSong));
         }
     }

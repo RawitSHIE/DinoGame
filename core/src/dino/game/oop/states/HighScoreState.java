@@ -59,7 +59,7 @@ public class HighScoreState extends State{
         System.out.println(Score.getScore());
         this.mainSong = mainSong;
 
-        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
+        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/click.wav"));
 
         for (int i = 0 ; i < 3 ; i++){
             one.add(new Texture(number[Score.getScore().get(i)%10]));
@@ -75,11 +75,11 @@ public class HighScoreState extends State{
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
-            c_btn.play(0.1f);
+            c_btn.play(0.5f);
             System.exit(0);
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
-            c_btn.play(0.1f);
+            c_btn.play(0.5f);
             gsm.set(new MenuState(gsm, mainSong));
         }
     }

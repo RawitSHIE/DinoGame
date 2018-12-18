@@ -44,7 +44,7 @@ public class MenuState extends State {
         cam.setToOrtho(false, DinoGame.WIDTH, DinoGame.HEIGHT);
         cam.position.set(0,cam.position.y,0);
         this.mainSong = mainSong;
-        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
+        c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/click.wav"));
 
 
         time = 0;
@@ -56,15 +56,15 @@ public class MenuState extends State {
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched() && Gdx.input.getX() >= 545 && Gdx.input.getX() <= 734 && Gdx.input.getY() >= 264 && Gdx.input.getY() <= 452 && !leaderboard){
-            c_btn.play(0.1f);
+            c_btn.play(0.5f);
             gsm.set(new PlayState(gsm, mainSong));
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711 && !leaderboard){
-            c_btn.play(0.1f);
+            c_btn.play(0.5f);
             gsm.set(new HighScoreState(gsm, mainSong));
         }
         if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
-            c_btn.play(0.1f);
+            c_btn.play(0.5f);
             System.exit(0);
         }
     }
