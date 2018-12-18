@@ -95,6 +95,32 @@ public class Score {
         return highscore;
     }
 
+    public static void ResetScore(){
+        for (int i = 0 ; i < rank.size() ; i ++){
+            rank.set(i, 0);
+        }
+
+        try {
+            fileWriter = new FileWriter(LOC);
+            printWriter = new PrintWriter(fileWriter);
+
+            for (Integer i : rank){
+                printWriter.write(i + "\n");
+            }
+
+            System.out.println(rank);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try{
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     public static void main(String[] args) {
 
     }

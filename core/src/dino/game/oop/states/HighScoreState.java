@@ -1,5 +1,6 @@
 package dino.game.oop.states;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +19,7 @@ public class HighScoreState extends State{
 
     private Texture background, scoreboard, score;
     private ArrayList<Texture> badge= new ArrayList<Texture>();
-    private Texture homeBtn, exitBtn;
+    private Texture homeBtn, exitBtn, resetBtn;
 
     private MainSong mainSong;
     private Sound c_btn;
@@ -29,6 +30,8 @@ public class HighScoreState extends State{
     private String[] num_frame;
 
     private ArrayList<Texture> one, ten, rank;
+
+    private boolean flag;
 
 
     public HighScoreState(GameStateManager gsm, MainSong mainSong) {
@@ -51,6 +54,7 @@ public class HighScoreState extends State{
 
         homeBtn = new Texture("homebtn.png");
         exitBtn = new Texture("exitbutton.png");
+        resetBtn = new Texture("reset.png");
 
         badge.add(new Texture("1st.png"));
         badge.add(new Texture("2nd.png"));
@@ -70,6 +74,8 @@ public class HighScoreState extends State{
         time = 0;
         backdrop = new Texture("backdrop.png");
         dust = new Texture(num_frame[0]);
+
+        flag = false;
     }
 
     @Override
@@ -78,9 +84,13 @@ public class HighScoreState extends State{
             c_btn.play(0.5f);
             System.exit(0);
         }
-        else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+        else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
             c_btn.play(0.5f);
             gsm.set(new MenuState(gsm, mainSong));
+        }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 1280/2 - exitBtn.getWidth()/2 && Gdx.input.getX() <= 1280/2 + exitBtn.getWidth()/2 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+            c_btn.play(0.5f);
+            Score.ResetScore();
+            gsm.set(new HighScoreState(gsm, mainSong));
         }
     }
 
@@ -102,7 +112,6 @@ public class HighScoreState extends State{
         sb.draw(dust, 0,0, 1280, 720);
 
         sb.draw(backdrop, 0 ,0);
-
 
         sb.draw(scoreboard,
                 cam.position.x - scoreboard.getWidth()/4 ,
@@ -148,6 +157,13 @@ public class HighScoreState extends State{
             sb.draw(homeBtn, 5, 5);
         }
 
+        // reset score
+        if(Gdx.input.getX() >= cam.position.x - exitBtn.getWidth()/2 && Gdx.input.getX() <= cam.position.x + exitBtn.getWidth()/2 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
+            sb.draw(resetBtn, cam.position.x - exitBtn.getWidth()/2 -2, 5-2 , exitBtn.getWidth() + 4 , exitBtn.getHeight() + 4);
+        }else{
+            sb.draw(resetBtn, cam.position.x - exitBtn.getWidth()/2, 5);
+        }
+
         if(Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711) {
             sb.draw(exitBtn, DinoGame.WIDTH -125 - 2, 5-2 , exitBtn.getWidth() + 4 , exitBtn.getHeight() + 4);
         }else{
@@ -173,6 +189,7 @@ public class HighScoreState extends State{
 
         homeBtn.dispose();
         exitBtn.dispose();
+        resetBtn.dispose();
 
         System.out.println("HighScoreState Dispose");
     }
