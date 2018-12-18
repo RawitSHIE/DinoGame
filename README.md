@@ -47,6 +47,20 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 
 ---
 
+# Manual Compile
+- เราสามารถ เปิด Game ที่เป็น File `.jar` ได้ 
+- เราสามารถ run ผ่าน command line ได้โดยไปที่ `path` ของ `.jar` ได้โดยพิมพ์คำสั่ง
+
+```
+java -jar WaveWings.jar
+```
+
+- ถ้าต้องการที่ จะ Complie จาก IDE ต้องมีการ set `path` ของ Working directory เป็น `../DinoGame/core/assets`
+
+<img src="resource/path.png">
+<p align = "center"> รูปตัวอย่างของ Configuration ในการ set path ใน IntelliJ</p>
+
+___
 
 # ![](/resource/users-1.png) Team Members
 |  |ชื่อ|นามสกุล|GitHub Username|รหัสนักศึกษา|
