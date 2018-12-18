@@ -2,6 +2,8 @@
 # ![](/resource/flag-3.png)  Endless-Running Game : Cave Wings
 Cave Wings เป็นเกมแบบไม่มีที่สิ้นสุด (Endless-Running Game) โดยมีตัวละครหลักคือ นกสีฟ้า และมีการบังคับโดยการใช้เม้าส์(Mouse) บังคับนกสีฟ้าเพื่อหลบสิ่งกีดขวาง และ เก็บไอเท็ม(เหรียญ และ หัวใจ)
 
+### แนะนำ เป็น Java version 8 - 10
+
 
 # ![](/resource/settings.png) Our Tools
 
@@ -13,7 +15,7 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 * libGDX
 
 
-# ![](/resource/idea.png) How to Play
+# ![](/resource/idea.png) How to Plays
 
 1. เมื่อเข้าเกมมาผู้เล่นจะเห็นหน้าต่างที่มีปุ่ม 3 ปุ่ม คือ ปุ่ม Play(กลาง), ปุ่ม Scoreboard(ซ้าย), ปุ่ม Exit(ขวา)
 
