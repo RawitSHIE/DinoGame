@@ -72,7 +72,7 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 
 # 🔗Reference
 
-[Libgdx](hhttps://libgdx.badlogicgames.com/)
+[Libgdx](https://libgdx.badlogicgames.com/)
 
 
 
