@@ -51,9 +51,11 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 # ![](/resource/users-1.png) Team Members
 |  |ชื่อ|นามสกุล|GitHub Username|รหัสนักศึกษา|
 |:-:|--|------|---------------|---------|
-|![https://www.facebook.com/kawisara.srn](/resource/toon.jpg)|Kawisara|Bunyen|[@zelotype](https://github.com/zelotype)|60070002|
-|![https://www.facebook.com/rawitgun](/resource/gun.jpg)|Rawit|Lohakhachornphan|[@RawitSHIE](https://github.com/RawitSHIEK)|60070081|
-|![https://www.facebook.com/profile.php?id=100002495318131p](/resource/pok.jpg)|Supakit|Theanthunyakit|[@POKINBKK](https://github.com/POKINBKK)|60070098|
+|![https://www.facebook.com/kawisara.srn](/resource/toon.jpg)|กวิสรา|บัณเย็น|[@zelotype](https://github.com/zelotype)|60070002|
+|![https://www.facebook.com/rawitgun](/resource/gun.jpg)|รวิชญ์|โลหะขจรพันธ์|[@RawitSHIE](https://github.com/RawitSHIEK)|60070081|
+|![https://www.facebook.com/profile.php?id=100002495318131p](/resource/pok.jpg)|ศุภกิตติ์|เธียรธัญญกิจ|[@POKINBKK](https://github.com/POKINBKK)|60070098|
+
+#### [ส่วนรายงาน และ JAR file](https://github.com/oop-it-kmitl-61/DinoGame/tree/master/Report%20and%20JAR)
 
 
 ---
