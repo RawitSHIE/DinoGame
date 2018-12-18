@@ -69,8 +69,17 @@ Cave Wings เป็นเกมแบบไม่มีที่สิ้นส
 
 คณะเทคโนโลยีสารสนเทศ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
 
+
+# 🔗Reference
+
+[Libgdx](hhttps://libgdx.badlogicgames.com/)
+
+
+
+<p align="center">
+<img src="resource/it.jpg" width="200">
+</p>
+<p align="center">Faculty of Information Technology</p>
+<p align="center">King Mongkut's Institute of Technology Ladkrabang</p>
+
 ---
-
-Faculty of Information Technology
-
-King Mongkut's Institute of Technology Ladkrabang
