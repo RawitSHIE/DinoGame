@@ -73,6 +73,7 @@ public class PlayState extends State {
         num_frame = new String[20];
         num_flash = new String[20];
         num_expo = new String[55];
+
         for (int i = 0; i < 20 ; i++){
             num_frame[i] = "gif/"+Integer.toString(i+1)+".gif";
             num_flash[i] = "flash/"+Integer.toString(i+1)+".png";
@@ -103,8 +104,6 @@ public class PlayState extends State {
 
         white = new Texture("white-dot.png");
 
-        score_one = new Texture(number[0]);
-        score_ten = new Texture(number[0]);
 
         //  grounds
         groundPos1 = new Vector2(cam.position.x/10 - cam.viewportWidth/2, GROUND_Y_OFFSET);
@@ -138,6 +137,7 @@ public class PlayState extends State {
         haweii.setVolume(0.2f);
         haweii.play();
 
+        // sound
         c_sound = Gdx.audio.newSound(Gdx.files.internal("Sound/coin.wav"));
         heart = Gdx.audio.newSound(Gdx.files.internal("Sound/heart.wav"));
         c_btn = Gdx.audio.newSound(Gdx.files.internal("Sound/btn.mp3"));
@@ -150,6 +150,7 @@ public class PlayState extends State {
         score_one = new Texture(number[0]);
         score_ten = new Texture(number[0]);
 
+        // initial start
         sec = new Texture(number[0]);
         tur1 = new Texture("tur1.png");
         tur2 = new Texture("tur2.png");
@@ -167,12 +168,12 @@ public class PlayState extends State {
         if(Gdx.input.justTouched() && !collide) {
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 662 && Gdx.input.getX() <= 796 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
-            c_btn.play();
             mainSong.play();
+            c_btn.play(0.1f);
             gsm.set(new MenuState(gsm, mainSong));
 
         }else if(Gdx.input.justTouched() && Gdx.input.getX() >= 485 && Gdx.input.getX() <= 617 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
-            c_btn.play();
+            c_btn.play(0.1f);
             gsm.set(new PlayState(gsm, mainSong));
         }
     }
@@ -193,6 +194,7 @@ public class PlayState extends State {
             }
             cam.position.x = mover.getPosition().x + 80;
 
+            //obs
             for (Obstacle obstacle : obstacles) {
                 if (cam.position.x - (cam.viewportWidth / 2) > obstacle.getPostop().x + obstacle.getTopobs().getWidth()) {
                     obstacle.reposition(obstacle.getPostop().x + ((Obstacle.OBS_WIDTH + OBS_SPACING) * 4));
@@ -204,6 +206,7 @@ public class PlayState extends State {
                 }
             }
 
+            // coins
             for (Coin c : coins) {
                 if (cam.position.x - (cam.viewportWidth / 2) > c.getPoscoins().x + c.getCoins().getWidth()) {
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
@@ -212,6 +215,8 @@ public class PlayState extends State {
                     c.reposition(c.getPoscoins().x + ((c.getCoins().getHeight() + COINS_SPACING) * COINS_COUNT));
                     c_sound.play(0.9f);
                     score++;
+
+                    // setting score
                     int indexone = score % 10;
                     int indexten = (int) Math.floor(score/10);
 
@@ -248,6 +253,7 @@ public class PlayState extends State {
             mover.updateAnimation(dt);
             head.updateAnimation(dt);
 
+            // epic sound for highscore
             if (ishighscore && !(isplay)){
                 c_highscore.play(0.2f);
                 isplay = true;
@@ -262,32 +268,32 @@ public class PlayState extends State {
         count ++;
 
         sb.setProjectionMatrix(cam.combined);
+
         sb.begin();
+
         sb.draw(bg, cam.position.x - cam.viewportWidth/2, 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth(), 0);
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2) + bg.getWidth()*2, 0);
         sb.draw(mover.getTexture(), mover.getPosition().x, mover.getPosition().y);
         sb.draw(head.getTexture(), head.getPosition().x, head.getPosition().y);
 
-
-
+        // draw obs
         for (Obstacle obstacle : obstacles){
             sb.draw(obstacle.getTopobs(), obstacle.getPostop().x , obstacle.getPostop().y);
             sb.draw(obstacle.getBottomobs(), obstacle.getPosbottom().x, obstacle.getPosbottom().y);
         }
-
+        // draw coins
         for (Coin c : coins){
             sb.draw(c.getCoins(), c.getPoscoins().x, c.getPoscoins().y);
         }
-
+        // draw potion
         sb.draw(potion.getPotions(), potion.getPospotions().x, potion.getPospotions().y);
 
-
-
-        //countdown
+        //initial countdown
         int tt = Math.max(time/60 , 0);
         sec.dispose();
         sec = new Texture(number[tt%10]);
+
 
         sb.draw(sec, cam.viewportWidth/8, cam.viewportHeight/2);
         if (time < 200)
@@ -299,7 +305,7 @@ public class PlayState extends State {
         sb.draw(ground ,groundPos1.x, groundPos1.y);
         sb.draw(ground ,groundPos2.x, groundPos2.y);
 
-        // dust stage
+        // easter egg --------
         white.dispose();
         dust.dispose();
         expo.dispose();
@@ -307,7 +313,7 @@ public class PlayState extends State {
         white = new Texture(num_flash[count%20]);
         dust = new Texture(num_frame[count%20]);
         expo = new Texture(num_expo[count%55]);
-
+        // dust stage
         if (count%2000 >= 500){
             if ((count%2000 >= 500 && count%2000 <= 520) || (count%2000 >= 980 && count%2000 <= 1000)){
                 sb.draw(white, cam.position.x - cam.viewportWidth/2,
@@ -323,9 +329,8 @@ public class PlayState extends State {
                         cam.viewportWidth,
                         cam.viewportHeight);
             }
-
         }
-        //Explosion
+        //Explosion Stage
         if (count%2000 >= 1500){
             if ((count%2000 >= 1500 && count%2000 <= 1520) || (count%2000 >= 1980 && count%2000 <= 2000)){
                 sb.draw(white, cam.position.x - cam.viewportWidth/2,
@@ -341,9 +346,8 @@ public class PlayState extends State {
                         cam.viewportWidth + 120,
                         cam.viewportHeight + 120);
             }
-
         }
-
+        // -------
         //game over
         if (collide){
             if (!set){
@@ -357,10 +361,9 @@ public class PlayState extends State {
                     }
                     isset = true;
                 }
-
             }
-            if (ishighscore){
 
+            if (ishighscore){
                 sb.draw(high,
                         cam.position.x - board.getWidth()/8,
                         cam.position.y - board.getHeight()/10,
@@ -392,7 +395,6 @@ public class PlayState extends State {
                     cam.position.x - 60,
                     cam.viewportHeight/2 - 10);
 
-
             // Draw Rank
             for (Integer i = 0; i < 3; i++){
 
@@ -420,12 +422,11 @@ public class PlayState extends State {
             }
 
             // endgame btn
-
             float adj_width = cam.position.x - cam.viewportWidth/2 ;
 
             if(Gdx.input.getX() >= 485 && Gdx.input.getX() <= 617 && Gdx.input.getY() >= 562 && Gdx.input.getY() <= 695) {
                 sb.draw(playb, adj_width + 240 -2, 10 - 2, 70 + 4, 70 + 4);
-            }else{
+            }else {
                 sb.draw(playb, adj_width + 240, 10, 70, 70);
             }
 
@@ -443,7 +444,6 @@ public class PlayState extends State {
         }
 
         //score screen
-
         int indexten = (int) Math.floor(score/10);
 
         sb.draw(score_one,
@@ -477,15 +477,17 @@ public class PlayState extends State {
         sb.end();
     }
 
-    //for delete old one
+    //clear state
     @Override
     public void dispose() {
         bg.dispose();
         head.dispose();
         mover.dispose();
         ground.dispose();
+
         score_one.dispose();
         score_ten.dispose();
+
         board.dispose();
         bar.dispose();
         bgh.dispose();

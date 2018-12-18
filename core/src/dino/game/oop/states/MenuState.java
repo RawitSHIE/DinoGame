@@ -56,15 +56,15 @@ public class MenuState extends State {
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched() && Gdx.input.getX() >= 545 && Gdx.input.getX() <= 734 && Gdx.input.getY() >= 264 && Gdx.input.getY() <= 452 && !leaderboard){
-            c_btn.play();
+            c_btn.play(0.1f);
             gsm.set(new PlayState(gsm, mainSong));
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711 && !leaderboard){
-            c_btn.play();
+            c_btn.play(0.1f);
             gsm.set(new HighScoreState(gsm, mainSong));
         }
         if(Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
-            c_btn.play();
+            c_btn.play(0.1f);
             System.exit(0);
         }
     }

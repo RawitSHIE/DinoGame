@@ -67,7 +67,6 @@ public class HighScoreState extends State{
             rank.add(new Texture(number[i+1]));
         }
 
-
         time = 0;
         backdrop = new Texture("backdrop.png");
         dust = new Texture(num_frame[0]);
@@ -76,10 +75,11 @@ public class HighScoreState extends State{
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched() && Gdx.input.getX() >= 1159 && Gdx.input.getX() <= 1272 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
+            c_btn.play(0.1f);
             System.exit(0);
         }
         else if(Gdx.input.justTouched() && Gdx.input.getX() >= 9 && Gdx.input.getX() <= 121 && Gdx.input.getY() >= 599 && Gdx.input.getY() <= 711){
-            c_btn.play();
+            c_btn.play(0.1f);
             gsm.set(new MenuState(gsm, mainSong));
         }
     }
